@@ -4,16 +4,16 @@ BASE_DIR=nodeconf
 NODE_NAME=r1
 FRR_PATH=/usr/lib/frr
 
-#enable IPv4 forwarding
-sysctl -w net.ipv4.ip_forward=1
-
+#enable IPv6 forwarding
+#sysctl -w net.ipv4.ip_forward=1
+sysctl -w net.ipv6.conf.all.forwarding = 1
 #disable reverse path filtering (needed for dynamic routing)
 #sysctl -w net.ipv4.conf.all.rp_filter=0
 #sysctl -w net.ipv4.conf.default.rp_filter=0
 #the following for loop also disables all and default
-for i in /proc/sys/net/ipv4/conf/*/rp_filter ; do
-  echo 0 > $i 
-done
+#for i in /proc/sys/net/ipv4/conf/*/rp_filter ; do
+  #echo 0 > $i 
+#done
 
 
 echo "no service integrated-vtysh-config" >> /etc/frr/vtysh.conf
@@ -24,4 +24,4 @@ $FRR_PATH/zebra -f $PWD/$BASE_DIR/$NODE_NAME/zebra.conf -d -z $PWD/$BASE_DIR/$NO
 
 sleep 1
 
-$FRR_PATH/ospfd -f $PWD/$BASE_DIR/$NODE_NAME/ospfd.conf -d -z $PWD/$BASE_DIR/$NODE_NAME/zebra.sock -i $PWD/$BASE_DIR/$NODE_NAME/ospfd.pid
+$FRR_PATH/ospf6d -f $PWD/$BASE_DIR/$NODE_NAME/ospf6d.conf -d -z $PWD/$BASE_DIR/$NODE_NAME/zebra.sock -i $PWD/$BASE_DIR/$NODE_NAME/ospf6d.pid

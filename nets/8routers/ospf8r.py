@@ -56,8 +56,11 @@ class BaseNode(Host):
         remove_if_exists(BASEDIR+self.name+"/zebra.pid")
         remove_if_exists(BASEDIR+self.name+"/zebra.log")
         remove_if_exists(BASEDIR+self.name+"/zebra.sock")
-        remove_if_exists(BASEDIR+self.name+"/ospfd.pid")
+        remove_if_exists(BASEDIR+self.name+"/ospf6d.pid")
+        remove_if_exists(BASEDIR+self.name+"/ospf6d.log")
         remove_if_exists(BASEDIR+self.name+"/ospfd.log")
+        remove_if_exists(BASEDIR+self.name+"/ospfd.pid")
+
         remove_if_exists(OUTPUT_PID_TABLE_FILE)
 
         # if os.path.exists(BASEDIR+self.name+"/zebra.pid"):
@@ -90,12 +93,30 @@ def add_link (node1, node2):
                        intfName2=node2.name+'-'+node1.name)
 
 def create_topo(my_net):
-    h1 = my_net.addHost(name='h1', cls=BaseNode)
-    h2 = my_net.addHost(name='h2', cls=BaseNode)
-    h3 = my_net.addHost(name='h3', cls=BaseNode)
+    h11 = my_net.addHost(name='h11', cls=BaseNode)
+    h12 = my_net.addHost(name='h12', cls=BaseNode)
+    h13 = my_net.addHost(name='h13', cls=BaseNode)
+
+    h31 = my_net.addHost(name='h31', cls=BaseNode)
+    h32 = my_net.addHost(name='h32', cls=BaseNode)
+    h33 = my_net.addHost(name='h33', cls=BaseNode)
+
+    h51 = my_net.addHost(name='h51', cls=BaseNode)
+    h52 = my_net.addHost(name='h52', cls=BaseNode)
+    h53 = my_net.addHost(name='h53', cls=BaseNode)
+
+    h81 = my_net.addHost(name='h81', cls=BaseNode)
+    h82 = my_net.addHost(name='h82', cls=BaseNode)
+    h83 = my_net.addHost(name='h83', cls=BaseNode)
+
     r1 = my_net.addHost(name='r1', cls=Router)
     r2 = my_net.addHost(name='r2', cls=Router)
     r3 = my_net.addHost(name='r3', cls=Router)
+    r4 = my_net.addHost(name='r4', cls=Router)
+    r5 = my_net.addHost(name='r5', cls=Router)
+    r6 = my_net.addHost(name='r6', cls=Router)
+    r7 = my_net.addHost(name='r7', cls=Router)
+    r8 = my_net.addHost(name='r8', cls=Router)
 
     #note that if the interface names are not provided,
     #the order of adding link will determine the
@@ -105,17 +126,42 @@ def create_topo(my_net):
     # the add_link function creates a link and assigns the interface names
     # as node1-node2 and node2-node1
 
-    #Link(h1, r1, intfName1='h1-r1', intfName2='r1-h1')
-    #Link(h2, r2, intfName1='h2-r2', intfName2='r2-h2')
-    #Link(h3, r3, intfName1='h3-r3', intfName2='r3-h3')
-    add_link(h1,r1)
-    add_link(h2,r2)
-    add_link(h3,r3)
-
+    #hosts of r1
+    add_link(h11,r1)
+    add_link(h12,r1)
+    add_link(h13,r1)
+    #r1 - r2
     add_link(r1,r2)
-    add_link(r1,r3)
+    #r2 - r3
     add_link(r2,r3)
-
+    #r2 - r7
+    add_link(r2,r7)
+    #hosts of r3
+    add_link(h31,r3)
+    add_link(h32,r3)
+    add_link(h33,r3)
+    #r3 - r4
+    add_link(r3,r4)
+    #r4 - r5
+    add_link(r4,r5)
+    #r4 - r6
+    add_link(r4,r6)
+    #hosts of r5
+    add_link(h51,r5)
+    add_link(h52,r5)
+    add_link(h53,r5)
+    #r5 - r6
+    add_link(r5,r6)
+    #r6 - r7
+    add_link(r6,r7)
+    #r6 - r8
+    add_link(r6,r8)
+    #r7 - r8
+    add_link(r7,r8)
+    #hosts of r8
+    add_link(h81,r8)
+    add_link(h82,r8)
+    add_link(h83,r8)
 
 def stopAll():
     # Clean Mininet emulation environment

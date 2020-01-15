@@ -1,7 +1,7 @@
 #!/bin/sh
 
 BASE_DIR=nodeconf
-NODE_NAME=r2
+NODE_NAME=r8
 FRR_PATH=/usr/lib/frr
 
 #enable IPv4 forwarding
@@ -12,7 +12,7 @@ sysctl -w net.ipv6.conf.all.forwarding = 1
 #sysctl -w net.ipv4.conf.default.rp_filter=0
 #the following for loop also disables all and default
 #for i in /proc/sys/net/ipv4/conf/*/rp_filter ; do
-  #echo 0 > $i 
+#  echo 0 > $i 
 #done
 
 
