@@ -1,6 +1,6 @@
 # 1920-srv6-tutorial
 
-'''
+```
 Python program ospf8r.py creates network and opens mininet
 In folder nodeconf/ 
 	- for each host and router one folder
@@ -15,7 +15,7 @@ In folder nodeconf/
 		- start.sh
 			- enables IPv6 forwarding
 			- executes zebra.conf and ospf6d.conf
-'''
+```
 
 network:
 network is shown in this link
