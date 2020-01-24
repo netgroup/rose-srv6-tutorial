@@ -1,5 +1,8 @@
 # 1920-srv6-tutorial
 
+project description and discussion: 
+https://docs.google.com/document/d/1I3Aj1HdJky4Mcy-eiNSsFkcV3nars7q7SOyohabsLgc/edit
+
 ```
 Python program ospf8r.py creates network and opens mininet
 In folder nodeconf/ 
@@ -18,8 +21,9 @@ In folder nodeconf/
 ```
 
 network:
-network is shown in this link
+the network is shown in this link
 https://docs.google.com/presentation/d/15w14n_Nf5rE560FluMnw4Wq51pYLvDqG1kEwDvmEHE0/edit#slide=id.g76160fda07_0_0
+
 host - router links:
 
 	h11 - r1: fd00:0:11::2/64	r1 - h11: fd00:0:11::1/64
