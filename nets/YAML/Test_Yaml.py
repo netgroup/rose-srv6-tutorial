@@ -88,7 +88,7 @@ def create_router_zebra(r_name, r_i_name, r_i_ip):
 			o.writelines(router_zebra_2)
 
 		router_zebra_3 = ["interface lo\n", " ipv6 address fcff:" + str(i+1) + "::1/128\n",
-			"!\n", "ipv6 forwarding\n", "!\n", "line vty\n", "!"]
+			"!\n", " ipv6 forwarding\n", "!\n", "line vty\n", "!"]
 		o.writelines(router_zebra_3)
 
 		o.close()
