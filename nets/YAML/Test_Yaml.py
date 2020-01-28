@@ -95,6 +95,28 @@ def create_router_zebra(r_name, r_i_name, r_i_ip):
 		os.chdir('..')
 
 
+def create_host_start(h_name, h_gw_name, h_ip_addr, h_gw_addr):
+	for i in range(0, len(h_name)):
+		host_start = ["#!/bin/sh\n\n",
+			"BASE_DIR=/home/user/mytests/hosts/nodeconf\n",
+			"NODE_NAME=" + h_name[i] + "\n",
+			"GW_NAME=" + h_gw_name[i] + "\n",
+			"IF_NAME=$NODE_NAME-$GW_NAME \n",
+			"IP_ADDR=" + h_ip_addr[i] + "\n",
+			"GW_ADDR=" + h_gw_addr[i] + "\n",
+			"ip -6 addr add $IP_ADDR dev $IF_NAME \n",
+			"ip -6 route add default via $GW_ADDR dev $IF_NAME"]
+
+		os.mkdir(h_name[i])
+		os.chdir(h_name[i])
+
+		s = open("start.sh", "w+")
+		s.writelines(host_start)
+		s.close()
+		os.chdir('..')
+
+
+
 with open("input-onlineyamltools.yaml", 'r') as stream:
 	network_list = yaml.safe_load(stream)
 
@@ -131,3 +153,4 @@ with open("input-onlineyamltools.yaml", 'r') as stream:
     	create_router_start(router_name)
     	create_router_ospf6d(router_name,router_interface_name, router_id)
     	create_router_zebra(router_name, router_interface_name, router_interface_ip_addr)
+    	create_host_start(host_name, host_gw_name, host_ip_addr, host_gw_addr)
