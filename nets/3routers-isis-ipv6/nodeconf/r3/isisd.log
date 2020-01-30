@@ -1,0 +1,21 @@
+2020/01/30 17:32:59 ISIS: ISIS MPLS-TE: Create new MPLS TE Circuit context
+2020/01/30 17:32:59 ISIS: MPLS-TE: Initialize circuit parameters for interface r3-h3
+2020/01/30 17:32:59 ISIS: ISIS MPLS-TE: Create new MPLS TE Circuit context
+2020/01/30 17:32:59 ISIS: MPLS-TE: Initialize circuit parameters for interface r3-r1
+2020/01/30 17:32:59 ISIS: ISIS MPLS-TE: Create new MPLS TE Circuit context
+2020/01/30 17:32:59 ISIS: MPLS-TE: Initialize circuit parameters for interface r3-r2
+2020/01/30 17:32:59 ISIS: [EC 100663304] ERROR: No such command on config line 6:  ipv6 router isis F00
+2020/01/30 17:32:59 ISIS: [EC 100663304] ERROR: No such command on config line 7:  ip router isis FOO
+2020/01/30 17:32:59 ISIS: [EC 100663304] ERROR: No such command on config line 8:  isis hello-interval 5
+2020/01/30 17:32:59 ISIS: [EC 100663304] ERROR: No such command on config line 27:   is-type level-2 only
+2020/01/30 17:32:59 ISIS: ISIS MPLS-TE: Create new MPLS TE Circuit context
+2020/01/30 17:32:59 ISIS: MPLS-TE: Initialize circuit parameters for interface lo
+2020/01/30 17:32:59 ISIS: MPLS-TE: Initialize circuit parameters for interface r3-h3
+2020/01/30 17:32:59 ISIS: MPLS-TE: Initialize circuit parameters for interface r3-r1
+2020/01/30 17:32:59 ISIS: MPLS-TE: Initialize circuit parameters for interface r3-r2
+2020/01/30 17:32:59 ISIS: circuit already connected
+2020/01/30 17:32:59 ISIS: circuit already connected
+2020/01/30 17:32:59 ISIS: circuit already connected
+2020/01/30 17:32:59 ISIS: circuit already connected
+2020/01/30 17:35:22 ISIS: circuit already disconnected
+2020/01/30 17:35:22 ISIS: circuit already disconnected

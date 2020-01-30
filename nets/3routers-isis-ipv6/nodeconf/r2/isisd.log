@@ -1,0 +1,19 @@
+2020/01/30 17:32:58 ISIS: ISIS MPLS-TE: Create new MPLS TE Circuit context
+2020/01/30 17:32:58 ISIS: MPLS-TE: Initialize circuit parameters for interface lo
+2020/01/30 17:32:58 ISIS: ISIS MPLS-TE: Create new MPLS TE Circuit context
+2020/01/30 17:32:58 ISIS: MPLS-TE: Initialize circuit parameters for interface r2-h2
+2020/01/30 17:32:58 ISIS: ISIS MPLS-TE: Create new MPLS TE Circuit context
+2020/01/30 17:32:58 ISIS: MPLS-TE: Initialize circuit parameters for interface r2-r1
+2020/01/30 17:32:58 ISIS: ISIS MPLS-TE: Create new MPLS TE Circuit context
+2020/01/30 17:32:58 ISIS: MPLS-TE: Initialize circuit parameters for interface r2-r3
+2020/01/30 17:32:58 ISIS: [EC 100663304] ERROR: No such command on config line 27:   is-type level-2 only
+2020/01/30 17:32:58 ISIS: MPLS-TE: Initialize circuit parameters for interface lo
+2020/01/30 17:32:58 ISIS: MPLS-TE: Initialize circuit parameters for interface r2-h2
+2020/01/30 17:32:58 ISIS: MPLS-TE: Initialize circuit parameters for interface r2-r1
+2020/01/30 17:32:58 ISIS: MPLS-TE: Initialize circuit parameters for interface r2-r3
+2020/01/30 17:32:58 ISIS: circuit already connected
+2020/01/30 17:32:58 ISIS: circuit already connected
+2020/01/30 17:32:58 ISIS: circuit already connected
+2020/01/30 17:32:58 ISIS: circuit already connected
+2020/01/30 17:35:22 ISIS: circuit already disconnected
+2020/01/30 17:35:22 ISIS: circuit already disconnected
