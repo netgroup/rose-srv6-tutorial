@@ -56,8 +56,8 @@ class BaseNode(Host):
         remove_if_exists(BASEDIR+self.name+"/zebra.pid")
         remove_if_exists(BASEDIR+self.name+"/zebra.log")
         remove_if_exists(BASEDIR+self.name+"/zebra.sock")
-        remove_if_exists(BASEDIR+self.name+"/ospfd.pid")
-        remove_if_exists(BASEDIR+self.name+"/ospfd.log")
+        remove_if_exists(BASEDIR+self.name+"/isisd.pid")
+        remove_if_exists(BASEDIR+self.name+"/isisd.log")
         remove_if_exists(OUTPUT_PID_TABLE_FILE)
 
         # if os.path.exists(BASEDIR+self.name+"/zebra.pid"):
@@ -121,7 +121,7 @@ def stopAll():
     # Clean Mininet emulation environment
     os.system('sudo mn -c')
     # Kill all the started daemons
-    os.system('sudo killall sshd zebra ospfd')
+    os.system('sudo killall sshd zebra isisd')
 
 def extractHostPid (dumpline):
     temp = dumpline[dumpline.find('pid=')+4:]
