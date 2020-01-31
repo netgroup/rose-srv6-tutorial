@@ -4,7 +4,7 @@ project description and discussion:
 https://docs.google.com/document/d/1I3Aj1HdJky4Mcy-eiNSsFkcV3nars7q7SOyohabsLgc/edit
 
 ```
-Python program ospf8r.py creates network and opens mininet
+Python program isis8d.py creates network and opens mininet
 In folder nodeconf/ 
 	- for each host and router one folder
 	- host folders contain start.sh for each host
@@ -13,11 +13,11 @@ In folder nodeconf/
 	- router folders contain 
 		- zebra.conf
 			- sets for each interface the IPv6 address
-		- ospf6d.conf
+		- isisd.conf
 			- contains routing information
 		- start.sh
 			- enables IPv6 forwarding
-			- executes zebra.conf and ospf6d.conf
+			- executes zebra.conf and isisd.conf
 ```
 
 network:
