@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # coding=utf-8
 
-import os                                                                                                #########start
+import os
 import shutil
 import yaml
 import argparse
-import sys                                                                                                #########ende
+import sys
 from mininet.topo import Topo
 from mininet.node import Host
 from mininet.net import Mininet
@@ -15,9 +15,9 @@ from mininet.link import Link
 from mininet.log import setLogLevel
 from mininet.link import TCLink
 
-#remove directory nodeconf/                                                                               ##########start
+#remove directory nodeconf/
 if os.path.exists("nodeconf"):
-    shutil.rmtree("nodeconf")       #ich weiß nicht, ob wir das brauchen
+    shutil.rmtree("nodeconf")
 
 #BASEDIR = "/home/user/mytests/ospf8routers/nodeconf/"
 BASEDIR = os.getcwd()+"/nodeconf/"
@@ -138,7 +138,7 @@ def create_host_start(h_name, h_gw_name, h_ip_addr, h_gw_addr):
 		s = open("start.sh", "w+")
 		s.writelines(host_start)
 		s.close()
-		os.chdir('..')                                                                               ###########ende
+		os.chdir('..')
 
 class BaseNode(Host):
 
@@ -217,7 +217,7 @@ def add_link (node1, node2):
     Link(node1, node2, intfName1=node1.name+'-'+node2.name,
                        intfName2=node2.name+'-'+node1.name)
 
-def create_topo(my_net):                                                                         ##########start
+def create_topo(my_net):
     for i in range(0, len(host_name)):
         create_hostlinks(host_name[i], my_net)
 
@@ -307,9 +307,3 @@ if __name__ == '__main__':
     # Tell mininet to print useful information
     setLogLevel('info')
     simpleTest()
-
-
-#################################################################################################################   ########start
-#Das muss theoretisch noch rein, um die Zuordnungen finden zu können:
-
-                                                                    #######ende
