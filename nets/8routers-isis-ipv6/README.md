@@ -5,9 +5,9 @@ https://docs.google.com/document/d/1I3Aj1HdJky4Mcy-eiNSsFkcV3nars7q7SOyohabsLgc/
 
 ```
 <<<<<<< HEAD
-Python program isid8r.py creates network and opens mininet
+Python program isid8d.py creates network and opens mininet
 =======
-Python program isid8r.py creates network and opens mininet
+Python program isid8d.py creates network and opens mininet
 >>>>>>> d23c758232730ca9dc916ee143384b3f17c75abc
 In folder nodeconf/ 
 	- for each host and router one folder
@@ -30,7 +30,7 @@ In folder nodeconf/
 
 network:
 the network is shown in this link
-https://docs.google.com/presentation/d/15w14n_Nf5rE560FluMnw4Wq51pYLvDqG1kEwDvmEHE0/edit#slide=id.g76160fda07_0_0
+https://drive.google.com/file/d/1yzyfgvgWbzPjTttcqA4G41gEGM87tHC5/view?usp=sharing
 
 host - router links:
 
