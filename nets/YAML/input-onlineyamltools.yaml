@@ -9,6 +9,11 @@
     ip_addr: 'fd00:0:12::2/64'
     gw_addr: 'fd00:0:12::1'
 
+  - name: h21
+    gw_name: r2
+    ip_addr: 'fd00:0:21::2/64'
+    gw_addr: 'fd00:0:21::1'
+
 routers:
   - name: r1
     router-id: 10.0.0.1
@@ -17,9 +22,13 @@ routers:
         ip_addr: 'fd00:0:11::1/64'
       - name: r1-h12
         ip_addr: 'fd00:0:12::1/64'
+      - name: r1-r2
+        ip_addr: 'fcf0:0:1:2::1/64'
   - name: r2
     router-id: 10.0.0.2
     interfaces:
+      - name: r2-h21
+        ip_addr: 'fd00:0:21::1/64'
       - name: r2-r1
         ip_addr: 'fcf0:0:1:2::2/64'
       - name: r2-r3
@@ -28,4 +37,5 @@ routers:
 links:
   - [h11, r1]
   - [h12, r1]
+  - [h21, r2]
   - [r1, r2]
