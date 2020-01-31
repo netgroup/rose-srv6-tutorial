@@ -4,7 +4,11 @@ project description and discussion:
 https://docs.google.com/document/d/1I3Aj1HdJky4Mcy-eiNSsFkcV3nars7q7SOyohabsLgc/edit
 
 ```
-Python program isis8d.py creates network and opens mininet
+<<<<<<< HEAD
+Python program isid8r.py creates network and opens mininet
+=======
+Python program isid8r.py creates network and opens mininet
+>>>>>>> d23c758232730ca9dc916ee143384b3f17c75abc
 In folder nodeconf/ 
 	- for each host and router one folder
 	- host folders contain start.sh for each host
@@ -17,7 +21,11 @@ In folder nodeconf/
 			- contains routing information
 		- start.sh
 			- enables IPv6 forwarding
+<<<<<<< HEAD
 			- executes zebra.conf and isisd.conf
+=======
+			- executes zebra.conf and isis8d.conf
+>>>>>>> d23c758232730ca9dc916ee143384b3f17c75abc
 ```
 
 network:
