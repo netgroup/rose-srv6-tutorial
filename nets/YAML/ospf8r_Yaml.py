@@ -15,15 +15,17 @@ from mininet.link import Link
 from mininet.log import setLogLevel
 from mininet.link import TCLink
 
+#remove directory nodeconf/                                                                               ##########start
+if os.path.exists("nodeconf"):
+    shutil.rmtree("nodeconf")       #ich weiß nicht, ob wir das brauchen
+
 #BASEDIR = "/home/user/mytests/ospf8routers/nodeconf/"
 BASEDIR = os.getcwd()+"/nodeconf/"
 OUTPUT_PID_TABLE_FILE = "/tmp/pid_table_file.txt"
 
-PRIVDIR = '/var/priv'
+print(BASEDIR)
 
-#remove directory nodeconf/                                                                               ##########start
-if os.path.exists("nodeconf"):
-    shutil.rmtree("nodeconf")       #ich weiß nicht, ob wir das brauchen
+PRIVDIR = '/var/priv'
 
 #variable declaration
 router_name = {}
@@ -98,7 +100,7 @@ def create_router_ospf6d(r_name, r_i_name, r_id):
 def create_router_zebra(r_name, r_i_name, r_i_ip):
 	for i in range(0, len(r_name)):
 		router_zebra_1 = ["! -*- zebra -*-\n\n", "!\n", "hostname " + r_name[i] + "\n",
-			"log file nodeconf/" + r_name[i] + "/zebra.log\n", "!\n", "debug zebtra events\n",
+			"log file nodeconf/" + r_name[i] + "/zebra.log\n", "!\n", "debug zebra events\n",
 			"debug zebra rib\n", "!\n"]
 		
 		os.chdir(r_name[i])
@@ -111,7 +113,7 @@ def create_router_zebra(r_name, r_i_name, r_i_ip):
 			o.writelines(router_zebra_2)
 
 		router_zebra_3 = ["interface lo\n", " ipv6 address fcff:" + str(i+1) + "::1/128\n",
-			"!\n", " ipv6 forwarding\n", "!\n", "line vty\n", "!"]
+			"!\n", "ipv6 forwarding\n", "!\n", "line vty\n", "!"]
 		o.writelines(router_zebra_3)
 
 		o.close()
@@ -142,7 +144,7 @@ class BaseNode(Host):
 
     def __init__(self, name, *args, **kwargs):
         dirs = [PRIVDIR]
-        Host.__init__(self, str(name), privateDirs=dirs, *args, **kwargs)
+        Host.__init__(self, name, privateDirs=dirs, *args, **kwargs)
         self.dir = "/tmp/%s" % name
         self.nets = []
         if not os.path.exists(self.dir):
@@ -164,6 +166,7 @@ class BaseNode(Host):
         self.cmd("echo '" + self.name + "' > "+PRIVDIR+"/hostname")
         if os.path.isfile(BASEDIR+self.name+"/start.sh") :
             self.cmd('source %s' %BASEDIR+self.name+"/start.sh")
+            #print(BASEDIR+self.name)
 
     def cleanup(self):
         def remove_if_exists (filename):
@@ -291,6 +294,14 @@ with open("input-onlineyamltools.yaml", 'r') as stream:
 
             if name == "links":
                 link_connect[i] = network_list[name][i] 
+
+if not os.path.exists("nodeconf"):
+    os.mkdir("nodeconf")                                            # create nodeconf/
+    os.chdir("nodeconf/")                                           # go into nodeconf/
+    create_router_start(router_name)
+    create_router_ospf6d(router_name,router_interface_name, router_id)
+    create_router_zebra(router_name, router_interface_name, router_interface_ip_addr)
+    create_host_start(host_name, host_gw_name, host_ip_addr, host_gw_addr)
 
 if __name__ == '__main__':
     # Tell mininet to print useful information
