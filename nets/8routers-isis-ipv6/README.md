@@ -1,13 +1,13 @@
 # 1920-srv6-tutorial
 
-project description and discussion: 
-https://docs.google.com/document/d/1I3Aj1HdJky4Mcy-eiNSsFkcV3nars7q7SOyohabsLgc/edit
+project description and discussion:[LINK] 
+
 
 ```
 <<<<<<< HEAD
-Python program isid8d.py creates network and opens mininet
+Python program isi8d.py creates network and opens mininet
 =======
-Python program isid8d.py creates network and opens mininet
+Python program isi8d.py creates network and opens mininet
 >>>>>>> d23c758232730ca9dc916ee143384b3f17c75abc
 In folder nodeconf/ 
 	- for each host and router one folder
