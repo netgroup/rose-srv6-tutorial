@@ -13,11 +13,11 @@ In folder nodeconf/
 	- router folders contain 
 		- zebra.conf
 			- sets for each interface the IPv6 address
-		- ospf6d.conf
+		- isisd.conf
 			- contains routing information
 		- start.sh
 			- enables IPv6 forwarding
-			- executes zebra.conf and ospf6d.conf
+			- executes zebra.conf and isis8d.conf
 ```
 
 network:
