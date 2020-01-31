@@ -4,7 +4,7 @@ project description and discussion:
 https://docs.google.com/document/d/1I3Aj1HdJky4Mcy-eiNSsFkcV3nars7q7SOyohabsLgc/edit
 
 ```
-Python program ospf8r.py creates network and opens mininet
+Python program isid8r.py creates network and opens mininet
 In folder nodeconf/ 
 	- for each host and router one folder
 	- host folders contain start.sh for each host
