@@ -23,8 +23,6 @@ if os.path.exists("nodeconf"):
 BASEDIR = os.getcwd()+"/nodeconf/"
 OUTPUT_PID_TABLE_FILE = "/tmp/pid_table_file.txt"
 
-print(BASEDIR)
-
 PRIVDIR = '/var/priv'
 
 #variable declaration
@@ -183,8 +181,6 @@ class BaseNode(Host):
         remove_if_exists(BASEDIR+self.name+"/zebra.sock")
         remove_if_exists(BASEDIR+self.name+"/ospf6d.pid")
         remove_if_exists(BASEDIR+self.name+"/ospf6d.log")
-        remove_if_exists(BASEDIR+self.name+"/ospfd.log")
-        remove_if_exists(BASEDIR+self.name+"/ospfd.pid")
 
         remove_if_exists(OUTPUT_PID_TABLE_FILE)
 
@@ -302,6 +298,7 @@ if not os.path.exists("nodeconf"):
     create_router_ospf6d(router_name,router_interface_name, router_id)
     create_router_zebra(router_name, router_interface_name, router_interface_ip_addr)
     create_host_start(host_name, host_gw_name, host_ip_addr, host_gw_addr)
+    
 
 if __name__ == '__main__':
     # Tell mininet to print useful information
