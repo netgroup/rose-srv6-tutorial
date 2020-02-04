@@ -1,4 +1,4 @@
-ISIS IPv6
+ISIS IPv6 network for 3 routers
 
 How to get FRR
 
@@ -30,18 +30,47 @@ fabricd=no
 
 ....
 
-We have to enable the deamon isis with "isisd=yes"
+We have to enable the deamon, so modify the word "isis=no" with "isisd=yes"
 
 
-ISIS Configuration
+----ISIS Configuration----
 
 Common options can be specified (Common Invocation Options) to isisd. isisd needs to acquire interface information from zebra in order to function. Therefore zebra must be running before invoking isisd. Also, if zebra is restarted then isisd must be too.
 
 
 Each routers contains the files "isisd.conf" "start.sh" "zebra.conf"
 
+The configuration of "zebra.conf" of each routers is for example:
 
-The configuration of "isisd.conf" of each routers is for example:
+!
+hostname r1
+log file nodeconf/r1/zebra.log
+!
+debug zebra events
+debug zebra rib
+!
+interface r1-h1
+ ipv6 address fd00:0:11::1/64
+!
+interface r1-r3
+ ipv6 address fcf0:0:3:4::1/64
+!
+interface r1-r2
+ ipv6 address fcf0:0:1:2::1/64
+!
+interface lo
+ ipv6 address fcff:1::1/128
+!
+ipv6 forwarding
+!
+line vty
+!
+
+In this file we define the interface between the links of router r1 and the hosts that are linked, in particular we also define the interface "lo" of the router 
+With the command "ipv6 forwarding" we explicitly enable the ipv6 forwarding
+
+
+-----The configuration of "isisd.conf" of each routers is for example:
 
 hostname r1
 password zebra
@@ -68,7 +97,7 @@ interface r1-r3
  isis hello-interval 5
 !
 router isis FOO
-  net 49.0001.1111.1111.1111.00
+  net 49.000X.XXXX.XXXX.XXXX.00
   is-type level-2-only
   metric-style wide
 !
@@ -98,5 +127,46 @@ The last byte (00) is the n-selector.
 The command
   is-type level-2-only
 
- Level 1 systems route within an area; when the destination is outside an area, they route toward a Level 2 system. Level 2 intermediate systems route between areas and toward other ASs. No IS-IS area functions strictly as a backbone.
+Level 1 systems route within an area; when the destination is outside an area, they route toward a Level 2 system. Level 2 intermediate systems route between areas and toward other ASs. No IS-IS area functions strictly as a backbone.
 Level 1 routers share intra-area routing information, and Level 2 routers share interarea information about IP addresses available within each area. Uniquely, IS-IS routers can act as both Level 1 and Level 2 routers, sharing intra-area routes with other Level 1 routers and interarea routes with other Level 2 routers.
+
+
+----Configuration of Hosts----
+
+each host has a configuration file called start.sh
+Currently IPv6 forwarding is not explicitly enabled in start.sh, we have to configure ipv6 addresses for each hosts
+
+
+Example of configuration of start.sh
+
+BASE_DIR=/home/user/Progetto/1920-srv6-tutorial/nets/8routers-isis-ipv6/nodeconf
+NODE_NAME=h11
+GW_NAME=r1
+IF_NAME=$NODE_NAME-$GW_NAME
+IP_ADDR=fd00:0:11::2/64
+GW_ADDR=fd00:0:11::1
+
+ip -6 addr add $IP_ADDR dev $IF_NAME 
+ip -6 route add default via $GW_ADDR dev $IF_NAME
+
+----Addressing----
+
+the addressing on the links between the hosts hxy and the router x can be
+Router interface rx-hxy fd00:0:xy::1/64
+Host interface hxy-ry fd00:0:xy::2/64
+
+
+host - router links:
+	h1 - r1: fd00:0:11::2/64	r1 - h1: fd00:0:11::1/64
+	h2 - r2: fd00:0:52::2/64	r2 - h2: fd00:0:52::1/64
+	h3 - r3: fd00:0:33::2/64	r3 - h3: fd00:0:33::1/64
+	
+router - router links:
+	r1 - r2: fcf0:0:1:2::1/64	r2 - r1: fcf0:0:1:2::2/64
+	r2 - r3: fcf0:0:2:3::1/64	r3 - r2: fcf0:0:2:3::2/64
+	r1 - r3: fcf0:0:3:4::1/64	r3 - r1: fcf0:0:3:4::2/64
+
+
+
+
+( The addressing plan is explained in https://docs.google.com/document/d/15giV53fH_eDuWadOxzjPVzlr-a7Rn65MpCbz9QKs7JI/edit )

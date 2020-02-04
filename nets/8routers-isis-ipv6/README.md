@@ -63,8 +63,9 @@ router - router links:
 	r6 -r8: fcf0:0:6:8::1/64	r8 - r6: fcf0:0:6:8::2/64
 	r7 -r8: fcf0:0:7:8::1/64	r8 - r7: fcf0:0:7:8::2/64
 
+( The addressing plan is explained in https://docs.google.com/document/d/15giV53fH_eDuWadOxzjPVzlr-a7Rn65MpCbz9QKs7JI/edit )
 
-ISIS CONFIGURATION
+------ISIS CONFIGURATION-------------
 
 Install guide and How to get FRR
 
@@ -207,7 +208,7 @@ Level 1 routers share intra-area routing information, and Level 2 routers share 
 each host has a configuration file called start.sh
 Currently IPv6 forwarding is not explicitly enabled in start.sh, we have to configure ipv6 addresses for each hosts
 
-Example of configuration 
+Example of configuration of start.sh
 
 BASE_DIR=/home/user/Progetto/1920-srv6-tutorial/nets/8routers-isis-ipv6/nodeconf
 NODE_NAME=h11
