@@ -1,8 +1,5 @@
 # 1920-srv6-tutorial
 
-project Topology:[LINK] 
-
-
 ```
 <<<<<<< HEAD
 Python program isi8d.py creates network and opens mininet
