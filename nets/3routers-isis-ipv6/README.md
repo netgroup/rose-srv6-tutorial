@@ -1,5 +1,8 @@
 ISIS IPv6 network for 3 routers
 
+
+SMART INTRODUCTION LINK----> https://drive.google.com/file/d/18PumHFw6o3df5-_yPtOVw4Zem8RDEjTr/view?usp=sharing
+
 How to get FRR
 
 The official FRR website is located at https://frrouting.org/ and contains further information, as well as links to additional resources.
