@@ -131,6 +131,8 @@ Level 1 systems route within an area; when the destination is outside an area, t
 Level 1 routers share intra-area routing information, and Level 2 routers share interarea information about IP addresses available within each area. Uniquely, IS-IS routers can act as both Level 1 and Level 2 routers, sharing intra-area routes with other Level 1 routers and interarea routes with other Level 2 routers.
 
 
+We can choose level 1 or level 2, but its a good idea use level 2 beacause we can route packet out of the networks
+
 ----Configuration of Hosts----
 
 each host has a configuration file called start.sh
