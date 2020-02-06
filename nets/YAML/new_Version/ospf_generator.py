@@ -125,7 +125,12 @@ def create_host_start(h_name, h_gw_name, h_ip_addr, h_gw_addr):
 		s.close()
 		os.chdir('..')         
 
+
 def create_python(h_name, r_name, l_connect):
+	"""
+	create ospf.py file dynamically adding topology
+	read from input yaml file
+	"""
 	python_1 = ["#!/usr/bin/python\n\n",
 			"import os\n",
 			"import shutil\n",
