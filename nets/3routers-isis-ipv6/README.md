@@ -1,6 +1,6 @@
-ISIS IPv6 network for 3 routers
+#ISIS IPv6 network for 3 routers
 
-
+```
 SMART INTRODUCTION LINK----> https://drive.google.com/file/d/18PumHFw6o3df5-_yPtOVw4Zem8RDEjTr/view?usp=sharing
 
 How to get FRR
@@ -170,7 +170,7 @@ router - router links:
 	r1 - r2: fcf0:0:1:2::1/64	r2 - r1: fcf0:0:1:2::2/64
 	r2 - r3: fcf0:0:2:3::1/64	r3 - r2: fcf0:0:2:3::2/64
 	r1 - r3: fcf0:0:3:4::1/64	r3 - r1: fcf0:0:3:4::2/64
-
+```
 
 
 
