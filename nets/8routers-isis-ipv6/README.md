@@ -1,12 +1,10 @@
 # 1920-srv6-tutorial
-```
+
 SMART INTRODUCTION LINK ---> https://drive.google.com/file/d/18PumHFw6o3df5-_yPtOVw4Zem8RDEjTr/view?usp=sharing
+
+
 ```
-<<<<<<< HEAD
-Python program isi8d.py creates network and opens mininet
-=======
-Python program isi8d.py creates network and opens mininet
->>>>>>> d23c758232730ca9dc916ee143384b3f17c75abc
+
 In folder nodeconf/ 
 	- for each host and router one folder
 	- host folders contain start.sh for each host
@@ -19,12 +17,10 @@ In folder nodeconf/
 			- contains routing information
 		- start.sh
 			- enables IPv6 forwarding
-<<<<<<< HEAD
 			- executes zebra.conf and isisd.conf
-=======
-			- executes zebra.conf and isis8d.conf
->>>>>>> d23c758232730ca9dc916ee143384b3f17c75abc
-```
+
+
+
 
 network:
 the network is shown in this link
