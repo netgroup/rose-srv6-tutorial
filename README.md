@@ -22,12 +22,18 @@ IPv6 topology can be defined, dynamic routing with OSPFv3 / FRR
 
 ## Installation of FRRouting suite (FRR)
 
-You need to have FRR installed in order to run the mininet labs
+You need to have FRR installed in order to run the mininet labs.
+Check if FRR is installed by running:
+```
+  
+  /usr/lib/frr/zebra -v
+```
 
 On Ubuntu, simply run:
-    
-    sudo snap install frr
+```    
 
+  sudo snap install frr
+```
 as described in https://snapcraft.io/install/frr/ubuntu
 
 Installation from source is described here: http://docs.frrouting.org/en/latest/installation.html#from-source
