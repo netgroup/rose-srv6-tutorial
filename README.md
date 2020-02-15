@@ -29,13 +29,13 @@ Check if FRR is installed by running:
   /usr/lib/frr/zebra -v
 ```
 
-On Ubuntu, simply run:
+For the installation on Ubuntu, simply run:
 ```    
 
   sudo snap install frr
 ```
 as described in https://snapcraft.io/install/frr/ubuntu
 
-Installation from source is described here: http://docs.frrouting.org/en/latest/installation.html#from-source
+Installation from source code is described here: http://docs.frrouting.org/en/latest/installation.html#from-source
 
 
