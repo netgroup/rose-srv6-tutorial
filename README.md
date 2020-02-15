@@ -16,6 +16,20 @@ small IPv6 topology with IS-IS / FRR
 reference IPv6 topology with IS-IS / FRR
 
 - YAML
-IPv6 topology can be defined, dynamic routing with OSPFv3
+IPv6 topology can be defined, dynamic routing with OSPFv3 / FRR
 
 ```
+
+## Installation of FRRouting suite (FRR)
+
+You need to have FRR installed in order to run the mininet labs
+
+On Ubuntu, simply run:
+    
+    sudo snap install frr
+
+as described in https://snapcraft.io/install/frr/ubuntu
+
+Installation from source is described here: http://docs.frrouting.org/en/latest/installation.html#from-source
+
+
