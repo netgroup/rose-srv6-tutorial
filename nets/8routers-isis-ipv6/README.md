@@ -24,7 +24,12 @@ In folder nodeconf/
 
 network:
 the network is shown in this link
+https://docs.google.com/presentation/d/15w14n_Nf5rE560FluMnw4Wq51pYLvDqG1kEwDvmEHE0/edit#slide=id.g76160fda07_0_0
+
+and also in this link
 https://drive.google.com/file/d/1yzyfgvgWbzPjTttcqA4G41gEGM87tHC5/view?usp=sharing
+
+
 
 host - router links:
 
