@@ -118,6 +118,8 @@ def create_topo(my_net):
     r7 = my_net.addHost(name='r7', cls=Router)
     r8 = my_net.addHost(name='r8', cls=Router)
 
+    s1 = my_net.addHost(name='s1', cls=Router)
+
     #note that if the interface names are not provided,
     #the order of adding link will determine the
     #naming of the interfaces (e.g. on r1: r1-eth0, r1-eth1, r1-eth2...)
@@ -142,16 +144,16 @@ def create_topo(my_net):
     add_link(h33,r3)
     #r3 - r4
     add_link(r3,r4)
-    #r4 - r5
-    add_link(r4,r5)
-    #r4 - r6
-    add_link(r4,r6)
+    #r4 - s1
+    add_link(r4,s1)
+    #r6 - s1
+    add_link(r6,s1)
     #hosts of r5
     add_link(h51,r5)
     add_link(h52,r5)
     add_link(h53,r5)
-    #r5 - r6
-    add_link(r5,r6)
+    #r5 - s1
+    add_link(r5,s1)
     #r6 - r7
     add_link(r6,r7)
     #r6 - r8
