@@ -3,7 +3,7 @@
 SMART INTRODUCTION LINK ---> https://drive.google.com/file/d/18PumHFw6o3df5-_yPtOVw4Zem8RDEjTr/view?usp=sharing
 
 
-```
+```text
 
 In folder nodeconf/ 
 	- for each host and router one folder
@@ -61,8 +61,66 @@ router - router links:
 	r6 -r7: fcf0:0:6:7::1/64	r7 - r6: fcf0:0:6:7::2/64
 	r6 -r8: fcf0:0:6:8::1/64	r8 - r6: fcf0:0:6:8::2/64
 	r7 -r8: fcf0:0:7:8::1/64	r8 - r7: fcf0:0:7:8::2/64
+	
+router localhost
+
+    r1 fcff:1::1
+    r2 fcff:2::1
+    r3 fcff:3::1
+    r4 fcff:4::1
+    r5 fcff:5::1
+    r6 fcff:6::1
+    r7 fcff:7::1
+    r8 fcff:8::1
 
 ( The addressing plan is explained in https://docs.google.com/document/d/15giV53fH_eDuWadOxzjPVzlr-a7Rn65MpCbz9QKs7JI/edit )
+
+------Tunnel examples -------------
+1) Create a bidirectional tunnel between h11 and h83, passing through router r4
+
+1.1) set tunnel from r1 to r8 for fd00:0:83::/64
+
+   on r1: ip -6 route add fd00:0:83::/64 encap seg6 mode encap segs fcff:4::1,fcff:8::1 dev r1-h11
+
+   on r8: no explicit decap instruction is needed because net.ipv6.conf.*.seg6_enabled=1 
+
+1.2) set tunnel from r8 to r1 for fd00:0:11::/64
+
+   on r8: ip -6 route add fd00:0:11::/64 encap seg6 mode encap segs fcff:4::1,fcff:1::1 dev r8-h83
+
+   on r1: no explicit decap instruction is needed because net.ipv6.conf.*.seg6_enabled=1 
+
+after the tunnel is setup, you can ping from h11 to h83 and viceversa
+h11# ping6 fd00:0:83::2
+h83# ping6 fd00:0:11::2
+
+on recent versions of Linux kernel (>=5.5) it is also possible to ping the router IP address on 
+the interface with the host, while on previous ones it was not possible due to a bug in the SRv6
+implementation:
+h11# ping6 fd00:0:83::1
+
+Note that this is not the suggested approach, the explicit configuration of decap instruction
+is preferred, as described hereafter
+
+we use a decap SID in r8 and in r1 with the End.DT6 behavior, the SID used is fcff:8::100
+
+1.3) set tunnel from r1 to r8 for fd00:0:83::/64
+
+   on r1: ip -6 route add fd00:0:83::/64 encap seg6 mode encap segs fcff:4::1,fcff:8::100 dev r1-h11
+
+   on r8: ip -6 route add fcff:8::100 encap seg6local action End.DT6 table 254 dev r8-h83
+
+1.4) set tunnel from r8 to r1 for fd00:0:11::/64
+
+  on r8: ip -6 route add fd00:0:11::/64 encap seg6 mode encap segs fcff:4::1,fcff:1::100 dev r8-h83
+
+  on r1: ip -6 route add fcff:1::100 encap seg6local action End.DT6 table 254 dev r1-h11
+
+table 254 corresponds to the "main" routing table, using recent version of ip command
+we can use table name instead of table id, for example
+on r8: ip -6 route add fcff:8::100 encap seg6local action End.DT6 table main dev r8-h83
+
+
 
 ------ISIS CONFIGURATION-------------
 

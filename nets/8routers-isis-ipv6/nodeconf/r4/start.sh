@@ -25,3 +25,10 @@ $FRR_PATH/zebra -f $PWD/$BASE_DIR/$NODE_NAME/zebra.conf -d -z $PWD/$BASE_DIR/$NO
 sleep 1
 
 $FRR_PATH/isisd -f $PWD/$BASE_DIR/$NODE_NAME/isisd.conf -d -z $PWD/$BASE_DIR/$NODE_NAME/zebra.sock -i $PWD/$BASE_DIR/$NODE_NAME/isisd.pid
+
+# enable Segment Routing for IPv6
+sysctl -w net.ipv6.conf.all.seg6_enabled=1
+for dev in $(ip -o -6 a | awk '{ print $2 }' | grep -v "lo")
+do
+   sysctl -w net.ipv6.conf.$dev.seg6_enabled=1
+done
