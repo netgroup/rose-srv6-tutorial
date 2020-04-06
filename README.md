@@ -29,13 +29,21 @@ Check if FRR is installed by running:
   /usr/lib/frr/zebra -v
 ```
 
-For the installation on Ubuntu, simply run:
-```    
+If FRR is not installed, follow these instructions (for Ubuntu/Debian): 
 
-  sudo snap install frr
-```
-as described in https://snapcraft.io/install/frr/ubuntu
+1) wget https://deb.frrouting.org/frr/keys.asc
 
-Installation from source code is described here: http://docs.frrouting.org/en/latest/installation.html#from-source
+2) sudo apt-key add keys.asc
+
+3) rm keys.asc
+
+4) run lsb_release -s -c
+
+5) Edit the sources.list file in the /etc/apt folder, adding the following line at the end: deb https://deb.frrouting.org/frr <release> frr-stable	
+replacing <release> with the output of lsb_release -s -c 
+
+6) sudo apt update
+
+7) sudo apt -y install frr frr-pythontools
 
 
