@@ -9,14 +9,8 @@ small IPv4 topology with OSPF / FRR
 - 8routers
 reference IPv6 topology with OSPFv3 / FRR
 
-- 3routers-isis-ipv6
-small IPv6 topology with IS-IS / FRR
-
 - 8routers-isis-ipv6
 reference IPv6 topology with IS-IS / FRR
-
-- YAML
-IPv6 topology can be defined, dynamic routing with OSPFv3 / FRR
 
 ```
 
@@ -39,7 +33,11 @@ If FRR is not installed, follow these instructions (for Ubuntu/Debian):
 
 4) run lsb_release -s -c
 
-5) Edit the sources.list file in the /etc/apt folder, adding the following line at the end: deb https://deb.frrouting.org/frr <release> frr-stable	
+5) Edit the sources.list file in the /etc/apt folder, adding the following line at the end:
+```
+
+deb https://deb.frrouting.org/frr <release> frr-stable	
+```
 replacing <release> with the output of lsb_release -s -c 
 
 6) sudo apt update
