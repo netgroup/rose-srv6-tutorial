@@ -88,8 +88,8 @@ class Router(BaseNode):
 
 # the add_link function creates a link and assigns the interface names
 # as node1-node2 and node2-node1
-def add_link (node1, node2):
-    Link(node1, node2, intfName1=node1.name+'-'+node2.name,
+def add_link (my_net, node1, node2):
+    my_net.addLink(node1, node2, intfName1=node1.name+'-'+node2.name,
                        intfName2=node2.name+'-'+node1.name)
 
 def create_topo(my_net):
@@ -131,47 +131,48 @@ def create_topo(my_net):
     # as node1-node2 and node2-node1
 
     #hosts of r1
-    add_link(h11,r1)
-    add_link(h12,r1)
-    add_link(h13,r1)
+    add_link(my_net, h11,r1)
+    add_link(my_net, h12,r1)
+    add_link(my_net, h13,r1)
     #r1 - r2
-    add_link(r1,r2)
+    add_link(my_net, r1,r2)
     #datacenters of r2
-    add_link(hdc1,r2)
+    add_link(my_net, hdc1,r2)
     #r2 - r3
-    add_link(r2,r3)
+    add_link(my_net, r2,r3)
     #r2 - r7
-    add_link(r2,r7)
+    add_link(my_net, r2,r7)
     #hosts of r3
-    add_link(h31,r3)
-    add_link(h32,r3)
-    add_link(h33,r3)
+    add_link(my_net, h31,r3)
+    add_link(my_net, h32,r3)
+    add_link(my_net, h33,r3)
     #r3 - r4
-    add_link(r3,r4)
+    add_link(my_net, r3,r4)
     #r4 - r5
-    add_link(r4,r5)
+    add_link(my_net, r4,r5)
     #r4 - r6
-    add_link(r4,r6)
+    add_link(my_net, r4,r6)
     #hosts of r5
-    add_link(h51,r5)
-    add_link(h52,r5)
-    add_link(h53,r5)
+    add_link(my_net, h51,r5)
+    add_link(my_net, h52,r5)
+    add_link(my_net, h53,r5)
     #datacenters of r5
-    add_link(hdc3,r5)
+    add_link(my_net, hdc3,r5)
     #r5 - r6
-    add_link(r5,r6)
+    add_link(my_net, r5,r6)
     #r6 - r7
-    add_link(r6,r7)
+    add_link(my_net, r6,r7)
     #r6 - r8
-    add_link(r6,r8)
+    add_link(my_net, r6,r8)
     #r7 - r8
-    add_link(r7,r8)
+    add_link(my_net, r7,r8)
     #hosts of r8
-    add_link(h81,r8)
-    add_link(h82,r8)
-    add_link(h83,r8)
+    add_link(my_net, h81,r8)
+    add_link(my_net, h82,r8)
+    add_link(my_net, h83,r8)
     #datacenters of r8
-    add_link(hdc2,r8)
+    add_link(my_net, hdc2,r8)
+
 
 def stopAll():
     # Clean Mininet emulation environment
