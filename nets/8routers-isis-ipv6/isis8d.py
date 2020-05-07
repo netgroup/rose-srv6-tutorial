@@ -109,6 +109,10 @@ def create_topo(my_net):
     h82 = my_net.addHost(name='h82', cls=BaseNode)
     h83 = my_net.addHost(name='h83', cls=BaseNode)
 
+    hdc1 = my_net.addHost(name='hdc1', cls=BaseNode)
+    hdc2 = my_net.addHost(name='hdc2', cls=BaseNode)
+    hdc3 = my_net.addHost(name='hdc3', cls=BaseNode)
+
     r1 = my_net.addHost(name='r1', cls=Router)
     r2 = my_net.addHost(name='r2', cls=Router)
     r3 = my_net.addHost(name='r3', cls=Router)
@@ -132,6 +136,8 @@ def create_topo(my_net):
     add_link(h13,r1)
     #r1 - r2
     add_link(r1,r2)
+    #datacenters of r2
+    add_link(hdc1,r2)
     #r2 - r3
     add_link(r2,r3)
     #r2 - r7
@@ -150,6 +156,8 @@ def create_topo(my_net):
     add_link(h51,r5)
     add_link(h52,r5)
     add_link(h53,r5)
+    #datacenters of r5
+    add_link(hdc3,r5)
     #r5 - r6
     add_link(r5,r6)
     #r6 - r7
@@ -162,6 +170,8 @@ def create_topo(my_net):
     add_link(h81,r8)
     add_link(h82,r8)
     add_link(h83,r8)
+    #datacenters of r8
+    add_link(hdc2,r8)
 
 def stopAll():
     # Clean Mininet emulation environment
