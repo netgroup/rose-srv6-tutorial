@@ -7,6 +7,7 @@ SMART INTRODUCTION LINK ---> https://drive.google.com/file/d/18PumHFw6o3df5-_yPt
 
 In folder nodeconf/ 
 	- for each host and router one folder
+	- one folder for the controller
 	- host folders contain start.sh for each host
 		- sets IPv6 address for hosts
 		- adds IPv6 routing to gateway
@@ -18,16 +19,15 @@ In folder nodeconf/
 		- start.sh
 			- enables IPv6 forwarding
 			- executes zebra.conf and isisd.conf
+	- controller folder contains start.sh
+		- sets IPv6 address for the controller
 
 
 
 
 network:
 the network is shown in this link
-https://docs.google.com/presentation/d/15w14n_Nf5rE560FluMnw4Wq51pYLvDqG1kEwDvmEHE0/edit#slide=id.g76160fda07_0_0
-
-and also in this link
-https://drive.google.com/file/d/1yzyfgvgWbzPjTttcqA4G41gEGM87tHC5/view?usp=sharing
+https://docs.google.com/presentation/d/15w14n_Nf5rE560FluMnw4Wq51pYLvDqG1kEwDvmEHE0/edit#slide=id.g7752c9e8cd_5_88
 
 
 
@@ -61,6 +61,21 @@ router - router links:
 	r6 -r7: fcf0:0:6:7::1/64	r7 - r6: fcf0:0:6:7::2/64
 	r6 -r8: fcf0:0:6:8::1/64	r8 - r6: fcf0:0:6:8::2/64
 	r7 -r8: fcf0:0:7:8::1/64	r8 - r7: fcf0:0:7:8::2/64
+
+controller - switch links:
+
+	controller - sw: fcfd:0:0:fd::1/48
+
+router - switch links:
+
+	r1 - sw: fcfd:0:0:1::1/48
+	r2 - sw: fcfd:0:0:2::1/48
+	r3 - sw: fcfd:0:0:3::1/48
+	r4 - sw: fcfd:0:0:4::1/48
+	r5 - sw: fcfd:0:0:5::1/48
+	r6 - sw: fcfd:0:0:6::1/48
+	r7 - sw: fcfd:0:0:7::1/48
+	r8 - sw: fcfd:0:0:8::1/48
 	
 router localhost
 
