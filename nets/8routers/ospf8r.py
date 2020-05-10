@@ -31,7 +31,7 @@ class BaseNode(Host):
         Host.config(self, **kwargs)
         # Iterate over the interfaces
         first = True
-        for intf in self.intfs.itervalues():
+        for intf in self.intfs.values():
             # Remove any configured address
             self.cmd('ifconfig %s 0' %intf.name)
             # # For the first one, let's configure the mgmt address
@@ -187,7 +187,7 @@ def simpleTest():
     net.start()
 
 
-    print "Dumping host connections"
+    print("Dumping host connections")
     dumpNodeConnections(net.hosts)
     #print "Testing network connectivity"
     #net.pingAll()

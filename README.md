@@ -12,6 +12,12 @@ reference IPv6 topology with OSPFv3 / FRR
 - 8routers-isis-ipv6
 reference IPv6 topology with IS-IS / FRR
 
+- 8r-1c-out-band-isis
+reference IPv6 topology with IS-IS / FRR and out-of-band controller
+
+- 8r-1c-in-band-isis
+reference IPv6 topology with IS-IS / FRR and in-band controller
+
 ```
 
 ## Installation of FRRouting suite (FRR)
