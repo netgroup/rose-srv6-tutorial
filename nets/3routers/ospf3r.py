@@ -141,7 +141,7 @@ def simpleTest():
     net.start()
 
 
-    print "Dumping host connections"
+    print("Dumping host connections")
     dumpNodeConnections(net.hosts)
     #print "Testing network connectivity"
     #net.pingAll()

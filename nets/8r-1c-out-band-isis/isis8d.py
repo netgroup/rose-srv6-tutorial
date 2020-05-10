@@ -89,7 +89,12 @@ class Router(BaseNode):
 
 class Switch(OVSBridge):
     def __init__(self, name, *args, **kwargs):
+        dirs = [PRIVDIR]
         OVSBridge.__init__(self, name, *args, **kwargs)
+        self.dir = "/tmp/%s" % name
+        self.nets = []
+        if not os.path.exists(self.dir):
+            os.makedirs(self.dir) 
 
     def config(self, **kwargs):
         # Init steps
@@ -247,7 +252,7 @@ def simpleTest():
     net.start()
 
 
-    print "Dumping host connections"
+    print("Dumping host connections")
     dumpNodeConnections(net.hosts)
     #print "Testing network connectivity"
     #net.pingAll()
