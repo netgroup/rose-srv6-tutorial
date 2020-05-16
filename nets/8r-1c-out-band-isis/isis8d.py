@@ -10,7 +10,8 @@ if __name__ == '__main__':
     if os.path.exists('.venv'):
         with open('.venv', 'r') as venv_file:
             # Get virtualenv path from .venv file
-            venv_path = venv_file.read()
+            # and remove trailing newline chars
+            venv_path = venv_file.read().rstrip()
         # Get path of the activation script
         venv_path = os.path.join(venv_path, 'bin/activate_this.py')
         if not os.path.exists(venv_path):
