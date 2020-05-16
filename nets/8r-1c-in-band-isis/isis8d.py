@@ -52,9 +52,6 @@ if NODE_MANAGER_PATH is not None:
                                      'srv6_manager.py')
 # Get gRPC server port
 NODE_MANAGER_GRPC_PORT = os.getenv('NODE_MANAGER_GRPC_PORT', None)
-if NODE_MANAGER_GRPC_PORT:
-    NODE_MANAGER_GRPC_PORT = os.path.join(NODE_MANAGER_GRPC_PORT,
-                                          'srv6_manager.py')
 
 
 class BaseNode(Host):
@@ -132,7 +129,7 @@ class Router(BaseNode):
         BaseNode.config(self, **kwargs)
         # Start node managers
         if START_NODE_MANAGERS:
-            self.cmd('python %s --grpc_port %s'
+            self.cmd('python %s --grpc-port %s &'
                      % (NODE_MANAGER_PATH, NODE_MANAGER_GRPC_PORT))
 
 
