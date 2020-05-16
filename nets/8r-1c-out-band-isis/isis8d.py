@@ -2,7 +2,7 @@
 
 import os
 
-# Activate virtual environment
+# Activate virtual environment if a venv path has been specified in .venv
 # This must be executed only if this file has been executed as a 
 # script (instead of a module)
 if __name__ == '__main__':
