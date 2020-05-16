@@ -1,7 +1,29 @@
 #!/usr/bin/python
 
-from argparse import ArgumentParser
 import os
+
+# Activate virtual environment if a venv path has been specified in .venv
+# This must be executed only if this file has been executed as a 
+# script (instead of a module)
+if __name__ == '__main__':
+    # Check if .venv file exists
+    if os.path.exists('.venv'):
+        with open('.venv', 'r') as venv_file:
+            # Get virtualenv path from .venv file
+            venv_path = venv_file.read()
+        # Get path of the activation script
+        venv_path = os.path.join(venv_path, 'bin/activate_this.py')
+        if not os.path.exists(venv_path):
+            print('Virtual environment path specified in .venv '
+                  'points to an invalid path\n')
+            exit(-2)
+        with open(venv_path) as f:
+            # Read the activation script
+            code = compile(f.read(), venv_path, 'exec')
+            # Execute the activation script to activate the venv
+            exec(code, {'__file__': venv_path})
+
+from argparse import ArgumentParser
 import shutil
 from dotenv import load_dotenv
 from mininet.topo import Topo
@@ -19,17 +41,17 @@ OUTPUT_PID_TABLE_FILE = "/tmp/pid_table_file.txt"
 PRIVDIR = '/var/priv'
 
 START_NODE_MANAGERS = False
-NODE_MANAGER_PATH = ''
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Get node manager path
-NODE_MANAGER_PATH = os.getenv('NODE_MANAGER_PATH')
-NODE_MANAGER_PATH.join(NODE_MANAGER_PATH, 'srv6_manager.py')
+NODE_MANAGER_PATH = os.getenv('NODE_MANAGER_PATH', None)
+if NODE_MANAGER_PATH is not None:
+    NODE_MANAGER_PATH = os.path.join(NODE_MANAGER_PATH,
+                                     'srv6_manager.py')
 # Get gRPC server port
-NODE_MANAGER_GRPC_PORT = os.getenv('NODE_MANAGER_GRPC_PORT')
-NODE_MANAGER_GRPC_PORT.join(NODE_MANAGER_GRPC_PORT, 'srv6_manager.py')
+NODE_MANAGER_GRPC_PORT = os.getenv('NODE_MANAGER_GRPC_PORT', None)
 
 
 class BaseNode(Host):
@@ -107,8 +129,8 @@ class Router(BaseNode):
         BaseNode.config(self, **kwargs)
         # Start node managers
         if START_NODE_MANAGERS:
-            self.cmd('python %s --grpc_port %s'
-                     % (NODE_MANAGER_PATH % NODE_MANAGER_GRPC_PORT))
+            self.cmd('python %s --grpc-port %s &'
+                     % (NODE_MANAGER_PATH, NODE_MANAGER_GRPC_PORT))
 
 
 class Switch(OVSBridge):
@@ -313,17 +335,21 @@ if __name__ == '__main__':
     # Define whether to start node manager on routers or not 
     START_NODE_MANAGERS = args.start_node_managers
     if START_NODE_MANAGERS:
-        if NODE_MANAGER_PATH:
+        if NODE_MANAGER_PATH is None:
             print('Error: --start-node-managers requires NODE_MANAGER_PATH '
                 'variable')
-            print('NODE_MANAGER_PATH variable is not set in .env file or '
-                'the variable points to a non existing folder')
+            print('NODE_MANAGER_PATH variable not set in .env file\n')
             exit(-2)
-        if NODE_MANAGER_GRPC_PORT:
+        if not os.path.exists(NODE_MANAGER_PATH):
+            print('Error: --start-node-managers requires NODE_MANAGER_PATH '
+                'variable')
+            print('NODE_MANAGER_PATH defined in .env file '
+                  'points to a non existing folder\n')
+            exit(-2)
+        if NODE_MANAGER_GRPC_PORT is None:
             print('Error: --start-node-managers requires '
                   'NODE_MANAGER_GRPC_PORT variable')
-            print('NODE_MANAGER_GRPC_PORT variable is not set in .env file or '
-                'the variable points to a non existing folder')
+            print('NODE_MANAGER_GRPC_PORT variable not set in .env file\n')
             exit(-2)
     # Tell mininet to print useful information
     setLogLevel('info')
