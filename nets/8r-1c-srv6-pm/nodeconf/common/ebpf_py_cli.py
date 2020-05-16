@@ -2,8 +2,43 @@
 
 import os
 import sys
+from dotenv import load_dotenv
 
-sys.path.append(os.path.abspath("/opt/srv6-pm-xdp-ebpf/srv6-pfplm"))
+# Load environment variables from .env file
+load_dotenv()
+
+SRV6_PFPLM_PATH = '/opt/srv6-pm-xdp-ebpf/srv6-pfplm'
+
+# Environment variables have priority over hardcoded paths
+# If an environment variable is set, we must use it instead of
+# the hardcoded constant
+if os.getenv('SRV6_PFPLM_PATH') is not None:
+    # Check if the SRV6_PFPLM_PATH variable is set
+    if os.getenv('SRV6_PFPLM_PATH') == '':
+        print('Error : Set SRV6_PFPLM_PATH variable in .env\n')
+        sys.exit(-2)
+    # Check if the SRV6_PFPLM_PATH variable points to an existing folder
+    if not os.path.exists(SRV6_PFPLM_PATH):
+        print('Error : SRV6_PFPLM_PATH variable in '
+              '.env points to a non existing folder')
+        sys.exit(-2)
+    # SRV6_PFPLM_PATH in .env is correct. We use it.
+    SRV6_PFPLM_PATH = os.getenv('SRV6_PFPLM_PATH')
+else:
+    # SRV6_PFPLM_PATH in .env is not set, we use the hardcoded path
+    #
+    # Check if the SRV6_PFPLM_PATH variable is set
+    if SRV6_PFPLM_PATH == '':
+        print('Error : Set SRV6_PFPLM_PATH variable in .env or %s' % sys.argv[0])
+        sys.exit(-2)
+    # Check if the SRV6_PFPLM_PATH variable points to an existing folder
+    if not os.path.exists(SRV6_PFPLM_PATH):
+        print('Error : SRV6_PFPLM_PATH variable in '
+              '%s points to a non existing folder' % sys.argv[0])
+        print('Error : Set SRV6_PFPLM_PATH variable in .env or %s\n' % sys.argv[0])
+        sys.exit(-2)
+
+sys.path.append(os.path.abspath(SRV6_PFPLM_PATH))
 
 from xdp_srv6_pfplm_helper_user import EbpfException, EbpfPFPLM
 
