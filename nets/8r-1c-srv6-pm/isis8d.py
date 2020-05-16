@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import os
+
 # Activate virtual environment if a venv path has been specified in .venv
 # This must be executed only if this file has been executed as a 
 # script (instead of a module)
