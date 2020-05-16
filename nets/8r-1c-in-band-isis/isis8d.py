@@ -1,7 +1,9 @@
 #!/usr/bin/python
 
+from argparse import ArgumentParser
 import os
 import shutil
+from dotenv import load_dotenv
 from mininet.topo import Topo
 from mininet.node import Host
 from mininet.net import Mininet
@@ -15,6 +17,20 @@ BASEDIR = os.getcwd()+"/nodeconf/"
 OUTPUT_PID_TABLE_FILE = "/tmp/pid_table_file.txt"
 
 PRIVDIR = '/var/priv'
+
+START_NODE_MANAGERS = False
+NODE_MANAGER_PATH = ''
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get node manager path
+NODE_MANAGER_PATH = os.getenv('NODE_MANAGER_PATH')
+NODE_MANAGER_PATH.join(NODE_MANAGER_PATH, 'srv6_manager.py')
+# Get gRPC server port
+NODE_MANAGER_GRPC_PORT = os.getenv('NODE_MANAGER_GRPC_PORT')
+NODE_MANAGER_GRPC_PORT.join(NODE_MANAGER_GRPC_PORT, 'srv6_manager.py')
+
 
 class BaseNode(Host):
 
@@ -85,6 +101,15 @@ class BaseNode(Host):
 class Router(BaseNode):
     def __init__(self, name, *args, **kwargs):
         BaseNode.__init__(self, name, *args, **kwargs)
+
+    def config(self, **kwargs):
+        # Init steps
+        BaseNode.config(self, **kwargs)
+        # Start node managers
+        if START_NODE_MANAGERS:
+            self.cmd('python %s --grpc_port %s'
+                     % (NODE_MANAGER_PATH % NODE_MANAGER_GRPC_PORT))
+
 
 # the add_link function creates a link and assigns the interface names
 # as node1-node2 and node2-node1
@@ -216,8 +241,41 @@ def simpleTest():
     stopAll()
 
 
+def parse_arguments():
+    # Get parser
+    parser = ArgumentParser(
+        description='Emulation of a Mininet topology (8 routers running '
+                    'IS-IS, 1 controller in-band'
+    )
+    parser.add_argument(
+        '--start-node-managers', dest='start_node_managers',
+        action='store_true', default=False,
+        help='Define whether to start node manager on routers or not'
+    )
+    # Parse input parameters
+    args = parser.parse_args()
+    # Return the arguments
+    return args
+
 
 if __name__ == '__main__':
+    # Parse command-line arguments
+    args = parse_arguments()
+    # Define whether to start node manager on routers or not 
+    START_NODE_MANAGERS = args.start_node_managers
+    if START_NODE_MANAGERS:
+        if NODE_MANAGER_PATH:
+            print('Error: --start-node-managers requires NODE_MANAGER_PATH '
+                'variable')
+            print('NODE_MANAGER_PATH variable is not set in .env file or '
+                'the variable points to a non existing folder')
+            exit(-2)
+        if NODE_MANAGER_GRPC_PORT:
+            print('Error: --start-node-managers requires '
+                  'NODE_MANAGER_GRPC_PORT variable')
+            print('NODE_MANAGER_GRPC_PORT variable is not set in .env file or '
+                'the variable points to a non existing folder')
+            exit(-2)
     # Tell mininet to print useful information
     setLogLevel('info')
     simpleTest()
