@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import os
+import python_hosts
 import shutil
 from mininet.topo import Topo
 from mininet.node import Host
@@ -15,6 +16,10 @@ BASEDIR = os.getcwd()+"/nodeconf/"
 OUTPUT_PID_TABLE_FILE = "/tmp/pid_table_file.txt"
 
 PRIVDIR = '/var/priv'
+
+# Path of the file containing the entries (ip-hostname)
+# to be added to /etc/hosts
+ETC_HOSTS_FILE = './etc-hosts'
 
 class BaseNode(Host):
 
@@ -174,6 +179,26 @@ def create_topo(my_net):
     add_link(my_net, hdc2,r8)
 
 
+def add_nodes_to_etc_hosts():
+    # Get /etc/hosts
+    etc_hosts = python_hosts.hosts.Hosts()
+    # Import host-ip mapping defined in etc-hosts file
+    count = etc_hosts.import_file(ETC_HOSTS_FILE)
+    # Print results
+    print('*** Added %s entries to /etc/hosts\n' % count['write_result']['total_written'])
+
+
+def remove_nodes_from_etc_hosts(net):
+    print('*** Removing entries from /etc/hosts\n')
+    # Get /etc/hosts
+    etc_hosts = python_hosts.hosts.Hosts()
+    for host in net.hosts:
+        # Remove all the nodes from /etc/hosts
+        etc_hosts.remove_all_matching(name=str(host))
+    # Write changes to /etc/hosts
+    etc_hosts.write()
+
+
 def stopAll():
     # Clean Mininet emulation environment
     os.system('sudo mn -c')
@@ -207,7 +232,14 @@ def simpleTest():
         for host in net.hosts:
             file.write("%s %d\n" % (host, extractHostPid( repr(host) )) )
 
+    # Add Mininet nodes to /etc/hosts
+    add_nodes_to_etc_hosts()
+
     CLI( net ) 
+
+    # Remove Mininet nodes from /etc/hosts
+    remove_nodes_from_etc_hosts(net)
+
     net.stop() 
     stopAll()
 
