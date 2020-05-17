@@ -1,14 +1,6 @@
-127.0.0.1	localhost
-127.0.1.1	rose-srv6
-
-# The following lines are desirable for IPv6 capable hosts
-::1     ip6-localhost ip6-loopback
-fe00::0 ip6-localnet
-ff00::0 ip6-mcastprefix
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
-
 # Mininet hosts
+
+# Routers
 fcff:1::1       r1
 fcff:2::1       r2
 fcff:3::1       r3
@@ -17,6 +9,8 @@ fcff:5::1       r5
 fcff:6::1       r6
 fcff:7::1       r7
 fcff:8::1       r8
+
+# Hosts
 fd00:0:11::2    h11
 fd00:0:12::2    h12
 fd00:0:13::2    h13
@@ -29,6 +23,8 @@ fd00:0:53::2    h53
 fd00:0:81::2    h81
 fd00:0:82::2    h82
 fd00:0:83::2    h83
+
+# Data-centers
 fcff:2:1::2     hdc1
 fcff:8:1::2     hdc2
 fcff:5:1::2     hdc3

@@ -10,7 +10,8 @@ if __name__ == '__main__':
     if os.path.exists('.venv'):
         with open('.venv', 'r') as venv_file:
             # Get virtualenv path from .venv file
-            venv_path = venv_file.read()
+            # and remove trailing newline chars
+            venv_path = venv_file.read().rstrip()
         # Get path of the activation script
         venv_path = os.path.join(venv_path, 'bin/activate_this.py')
         if not os.path.exists(venv_path):
@@ -24,6 +25,7 @@ if __name__ == '__main__':
             exec(code, {'__file__': venv_path})
 
 from argparse import ArgumentParser
+import python_hosts
 import shutil
 from dotenv import load_dotenv
 from mininet.topo import Topo
@@ -40,6 +42,14 @@ OUTPUT_PID_TABLE_FILE = "/tmp/pid_table_file.txt"
 
 PRIVDIR = '/var/priv'
 
+# Path of the file containing the entries (ip-hostname)
+# to be added to /etc/hosts
+ETC_HOSTS_FILE = './etc-hosts'
+
+# Define whether to add Mininet nodes to /etc/hosts file or not
+ADD_ETC_HOSTS = True
+
+# Define whether to start the node managers on the routers or not
 START_NODE_MANAGERS = False
 
 # Load environment variables from .env file
@@ -225,6 +235,28 @@ def create_topo(my_net):
     add_link(my_net, controller,r2)
 
 
+def add_nodes_to_etc_hosts():
+    # Get /etc/hosts
+    etc_hosts = python_hosts.hosts.Hosts()
+    # Import host-ip mapping defined in etc-hosts file
+    count = etc_hosts.import_file(ETC_HOSTS_FILE)
+    # Print results
+    count = count['add_result']['ipv6_count'] + count['add_result']['ipv4_count']
+    print('*** Added %s entries to /etc/hosts\n' % count)
+
+
+def remove_nodes_from_etc_hosts(net):
+    print('*** Removing entries from /etc/hosts\n')
+    # Get /etc/hosts
+    etc_hosts = python_hosts.hosts.Hosts()
+    for host in net.hosts:
+        # Remove all the nodes from /etc/hosts
+        etc_hosts.remove_all_matching(name=str(host))
+    # Write changes to /etc/hosts
+    etc_hosts.write()
+
+
+
 def stopAll():
     # Clean Mininet emulation environment
     os.system('sudo mn -c')
@@ -258,7 +290,16 @@ def simpleTest():
         for host in net.hosts:
             file.write("%s %d\n" % (host, extractHostPid( repr(host) )) )
 
+    # Add Mininet nodes to /etc/hosts
+    if ADD_ETC_HOSTS:
+        add_nodes_to_etc_hosts()
+
     CLI( net ) 
+
+    # Remove Mininet nodes from /etc/hosts
+    if ADD_ETC_HOSTS:
+        remove_nodes_from_etc_hosts(net)
+
     net.stop() 
     stopAll()
 
@@ -273,6 +314,11 @@ def parse_arguments():
         '--start-node-managers', dest='start_node_managers',
         action='store_true', default=False,
         help='Define whether to start node manager on routers or not'
+    )
+    parser.add_argument(
+        '--no-etc-hosts', dest='add_etc_hosts',
+        action='store_false', default=True,
+        help='Define whether to add Mininet nodes to /etc/hosts file or not'
     )
     # Parse input parameters
     args = parser.parse_args()
@@ -302,6 +348,8 @@ if __name__ == '__main__':
                   'NODE_MANAGER_GRPC_PORT variable')
             print('NODE_MANAGER_GRPC_PORT variable not set in .env file\n')
             exit(-2)
+    # Define whether to add Mininet nodes to /etc/hosts file or not
+    ADD_ETC_HOSTS = args.add_etc_hosts
     # Tell mininet to print useful information
     setLogLevel('info')
     simpleTest()
