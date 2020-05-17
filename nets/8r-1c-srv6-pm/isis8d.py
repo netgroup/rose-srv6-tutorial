@@ -10,7 +10,8 @@ if __name__ == '__main__':
     if os.path.exists('.venv'):
         with open('.venv', 'r') as venv_file:
             # Get virtualenv path from .venv file
-            venv_path = venv_file.read()
+            # and remove trailing newline chars
+            venv_path = venv_file.read().rstrip()
         # Get path of the activation script
         venv_path = os.path.join(venv_path, 'bin/activate_this.py')
         if not os.path.exists(venv_path):
@@ -24,11 +25,10 @@ if __name__ == '__main__':
             exec(code, {'__file__': venv_path})
 
 from argparse import ArgumentParser
-import python_hosts
 import shutil
 from dotenv import load_dotenv
 from mininet.topo import Topo
-from mininet.node import Host
+from mininet.node import Host, OVSBridge
 from mininet.net import Mininet
 from mininet.cli import CLI
 from mininet.util import dumpNodeConnections
@@ -41,11 +41,6 @@ OUTPUT_PID_TABLE_FILE = "/tmp/pid_table_file.txt"
 
 PRIVDIR = '/var/priv'
 
-# Path of the file containing the entries (ip-hostname)
-# to be added to /etc/hosts
-ETC_HOSTS_FILE = './etc-hosts'
-
-# Define whether to start the node managers on the routers or not
 START_NODE_MANAGERS = False
 
 # Load environment variables from .env file
@@ -139,6 +134,42 @@ class Router(BaseNode):
                      % (NODE_MANAGER_PATH, NODE_MANAGER_GRPC_PORT))
 
 
+class Switch(OVSBridge):
+    def __init__(self, name, *args, **kwargs):
+        dirs = [PRIVDIR]
+        OVSBridge.__init__(self, name, *args, **kwargs)
+        self.dir = "/tmp/%s" % name
+        self.nets = []
+        if not os.path.exists(self.dir):
+            os.makedirs(self.dir) 
+
+    def config(self, **kwargs):
+        # Init steps
+        OVSBridge.config(self, **kwargs)
+        # Iterate over the interfaces
+        for intf in self.intfs.itervalues():
+            # Remove any configured address
+            self.cmd('ifconfig %s 0' %intf.name)
+            # # For the first one, let's configure the mgmt address
+            # if first:
+            #   first = False
+            #   self.cmd('ip a a %s dev %s' %(kwargs['mgmtip'], intf.name))
+        #let's write the hostname in /var/mininet/hostname
+        self.cmd("echo '" + self.name + "' > "+PRIVDIR+"/hostname")
+        if os.path.isfile(BASEDIR+self.name+"/start.sh") :
+            self.cmd('source %s' %BASEDIR+self.name+"/start.sh")
+
+    def cleanup(self):
+        def remove_if_exists (filename):
+            if os.path.exists(filename):
+                os.remove(filename)
+
+        OVSBridge.cleanup(self)
+        # Rm dir
+        if os.path.exists(self.dir):
+            shutil.rmtree(self.dir)
+
+
 # the add_link function creates a link and assigns the interface names
 # as node1-node2 and node2-node1
 def add_link (my_net, node1, node2):
@@ -166,7 +197,8 @@ def create_topo(my_net):
     hdc2 = my_net.addHost(name='hdc2', cls=BaseNode)
     hdc3 = my_net.addHost(name='hdc3', cls=BaseNode)
 
-    controller = my_net.addHost(name='controller', cls=BaseNode, inNamespace=False)
+    controller = my_net.addHost(name='controller', cls=BaseNode,
+                                sshd=False, inNamespace=False)
 
     r1 = my_net.addHost(name='r1', cls=Router)
     r2 = my_net.addHost(name='r2', cls=Router)
@@ -227,36 +259,27 @@ def create_topo(my_net):
     add_link(my_net, h83,r8)
     #datacenters of r8
     add_link(my_net, hdc2,r8)
-    #controller
-    add_link(my_net, controller,r2)
 
-
-def add_nodes_to_etc_hosts():
-    # Get /etc/hosts
-    etc_hosts = python_hosts.hosts.Hosts()
-    # Import host-ip mapping defined in etc-hosts file
-    count = etc_hosts.import_file(ETC_HOSTS_FILE)
-    # Print results
-    print('*** Added %s entries to /etc/hosts\n' % count['write_result']['total_written'])
-
-
-def remove_nodes_from_etc_hosts(net):
-    print('*** Removing entries from /etc/hosts\n')
-    # Get /etc/hosts
-    etc_hosts = python_hosts.hosts.Hosts()
-    for host in net.hosts:
-        # Remove all the nodes from /etc/hosts
-        etc_hosts.remove_all_matching(name=str(host))
-    # Write changes to /etc/hosts
-    etc_hosts.write()
-
+    # Create the mgmt switch
+    sw = my_net.addSwitch(name='sw', cls=Switch, dpid='1')
+    # Create a link between mgmt switch and controller
+    add_link(my_net, controller, sw)
+    # Connect all the routers to the management network
+    add_link(my_net, r1, sw)
+    add_link(my_net, r2, sw)
+    add_link(my_net, r3, sw)
+    add_link(my_net, r4, sw)
+    add_link(my_net, r5, sw)
+    add_link(my_net, r6, sw)
+    add_link(my_net, r7, sw)
+    add_link(my_net, r8, sw)
 
 
 def stopAll():
     # Clean Mininet emulation environment
     os.system('sudo mn -c')
     # Kill all the started daemons
-    os.system('sudo killall sshd zebra isisd')
+    os.system('sudo killall zebra isisd')
 
 def extractHostPid (dumpline):
     temp = dumpline[dumpline.find('pid=')+4:]
@@ -285,14 +308,7 @@ def simpleTest():
         for host in net.hosts:
             file.write("%s %d\n" % (host, extractHostPid( repr(host) )) )
 
-    # Add Mininet nodes to /etc/hosts
-    add_nodes_to_etc_hosts()
-
     CLI( net ) 
-
-    # Remove Mininet nodes from /etc/hosts
-    remove_nodes_from_etc_hosts(net)
-
     net.stop() 
     stopAll()
 
@@ -301,7 +317,7 @@ def parse_arguments():
     # Get parser
     parser = ArgumentParser(
         description='Emulation of a Mininet topology (8 routers running '
-                    'IS-IS, 1 controller in-band'
+                    'IS-IS, 1 controller out-of-band'
     )
     parser.add_argument(
         '--start-node-managers', dest='start_node_managers',

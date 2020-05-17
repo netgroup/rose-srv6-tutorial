@@ -1,8 +1,33 @@
 #!/usr/bin/python
 
 import os
+
+# Activate virtual environment if a venv path has been specified in .venv
+# This must be executed only if this file has been executed as a 
+# script (instead of a module)
+if __name__ == '__main__':
+    # Check if .venv file exists
+    if os.path.exists('.venv'):
+        with open('.venv', 'r') as venv_file:
+            # Get virtualenv path from .venv file
+            # and remove trailing newline chars
+            venv_path = venv_file.read().rstrip()
+        # Get path of the activation script
+        venv_path = os.path.join(venv_path, 'bin/activate_this.py')
+        if not os.path.exists(venv_path):
+            print('Virtual environment path specified in .venv '
+                  'points to an invalid path\n')
+            exit(-2)
+        with open(venv_path) as f:
+            # Read the activation script
+            code = compile(f.read(), venv_path, 'exec')
+            # Execute the activation script to activate the venv
+            exec(code, {'__file__': venv_path})
+
+from argparse import ArgumentParser
 import python_hosts
 import shutil
+from dotenv import load_dotenv
 from mininet.topo import Topo
 from mininet.node import Host, OVSBridge
 from mininet.net import Mininet
@@ -20,6 +45,21 @@ PRIVDIR = '/var/priv'
 # Path of the file containing the entries (ip-hostname)
 # to be added to /etc/hosts
 ETC_HOSTS_FILE = './etc-hosts'
+
+# Define whether to start the node managers on the routers or not
+START_NODE_MANAGERS = False
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get node manager path
+NODE_MANAGER_PATH = os.getenv('NODE_MANAGER_PATH', None)
+if NODE_MANAGER_PATH is not None:
+    NODE_MANAGER_PATH = os.path.join(NODE_MANAGER_PATH,
+                                     'srv6_manager.py')
+# Get gRPC server port
+NODE_MANAGER_GRPC_PORT = os.getenv('NODE_MANAGER_GRPC_PORT', None)
+
 
 class BaseNode(Host):
 
@@ -90,6 +130,14 @@ class BaseNode(Host):
 class Router(BaseNode):
     def __init__(self, name, *args, **kwargs):
         BaseNode.__init__(self, name, *args, **kwargs)
+
+    def config(self, **kwargs):
+        # Init steps
+        BaseNode.config(self, **kwargs)
+        # Start node managers
+        if START_NODE_MANAGERS:
+            self.cmd('python %s --grpc-port %s &'
+                     % (NODE_MANAGER_PATH, NODE_MANAGER_GRPC_PORT))
 
 
 class Switch(OVSBridge):
@@ -303,8 +351,45 @@ def simpleTest():
     stopAll()
 
 
+def parse_arguments():
+    # Get parser
+    parser = ArgumentParser(
+        description='Emulation of a Mininet topology (8 routers running '
+                    'IS-IS, 1 controller out-of-band'
+    )
+    parser.add_argument(
+        '--start-node-managers', dest='start_node_managers',
+        action='store_true', default=False,
+        help='Define whether to start node manager on routers or not'
+    )
+    # Parse input parameters
+    args = parser.parse_args()
+    # Return the arguments
+    return args
+
 
 if __name__ == '__main__':
+    # Parse command-line arguments
+    args = parse_arguments()
+    # Define whether to start node manager on routers or not 
+    START_NODE_MANAGERS = args.start_node_managers
+    if START_NODE_MANAGERS:
+        if NODE_MANAGER_PATH is None:
+            print('Error: --start-node-managers requires NODE_MANAGER_PATH '
+                'variable')
+            print('NODE_MANAGER_PATH variable not set in .env file\n')
+            exit(-2)
+        if not os.path.exists(NODE_MANAGER_PATH):
+            print('Error: --start-node-managers requires NODE_MANAGER_PATH '
+                'variable')
+            print('NODE_MANAGER_PATH defined in .env file '
+                  'points to a non existing folder\n')
+            exit(-2)
+        if NODE_MANAGER_GRPC_PORT is None:
+            print('Error: --start-node-managers requires '
+                  'NODE_MANAGER_GRPC_PORT variable')
+            print('NODE_MANAGER_GRPC_PORT variable not set in .env file\n')
+            exit(-2)
     # Tell mininet to print useful information
     setLogLevel('info')
     simpleTest()
