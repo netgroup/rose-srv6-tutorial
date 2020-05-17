@@ -287,7 +287,8 @@ def add_nodes_to_etc_hosts():
     # Import host-ip mapping defined in etc-hosts file
     count = etc_hosts.import_file(ETC_HOSTS_FILE)
     # Print results
-    print('*** Added %s entries to /etc/hosts\n' % count['write_result']['total_written'])
+    count = count['add_result']['ipv6_count'] + count['add_result']['ipv4_count']
+    print('*** Added %s entries to /etc/hosts\n' % count)
 
 
 def remove_nodes_from_etc_hosts(net):
