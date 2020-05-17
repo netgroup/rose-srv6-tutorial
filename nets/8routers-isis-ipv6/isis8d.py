@@ -23,7 +23,8 @@ if __name__ == '__main__':
             code = compile(f.read(), venv_path, 'exec')
             # Execute the activation script to activate the venv
             exec(code, {'__file__': venv_path})
-            
+
+from argparse import ArgumentParser    
 import python_hosts
 import shutil
 from mininet.topo import Topo
@@ -43,6 +44,9 @@ PRIVDIR = '/var/priv'
 # Path of the file containing the entries (ip-hostname)
 # to be added to /etc/hosts
 ETC_HOSTS_FILE = './etc-hosts'
+
+# Define whether to add Mininet nodes to /etc/hosts file or not
+ADD_ETC_HOSTS = True
 
 class BaseNode(Host):
 
@@ -257,19 +261,42 @@ def simpleTest():
             file.write("%s %d\n" % (host, extractHostPid( repr(host) )) )
 
     # Add Mininet nodes to /etc/hosts
-    add_nodes_to_etc_hosts()
+    if ADD_ETC_HOSTS:
+        add_nodes_to_etc_hosts()
 
     CLI( net ) 
 
     # Remove Mininet nodes from /etc/hosts
-    remove_nodes_from_etc_hosts(net)
+    if ADD_ETC_HOSTS:
+        remove_nodes_from_etc_hosts(net)
 
     net.stop() 
     stopAll()
 
 
+def parse_arguments():
+    # Get parser
+    parser = ArgumentParser(
+        description='Emulation of a Mininet topology (8 routers running '
+                    'IS-IS, 1 controller out-of-band'
+    )
+    parser.add_argument(
+        '--no-etc-hosts', dest='add_etc_hosts',
+        action='store_false', default=True,
+        help='Define whether to add Mininet nodes to /etc/hosts file or not'
+    )
+    # Parse input parameters
+    args = parser.parse_args()
+    # Return the arguments
+    return args
+
+
 
 if __name__ == '__main__':
+    # Parse command-line arguments
+    args = parse_arguments()
+    # Define whether to add Mininet nodes to /etc/hosts file or not
+    ADD_ETC_HOSTS = args.add_etc_hosts
     # Tell mininet to print useful information
     setLogLevel('info')
     simpleTest()

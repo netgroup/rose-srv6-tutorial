@@ -46,6 +46,9 @@ PRIVDIR = '/var/priv'
 # to be added to /etc/hosts
 ETC_HOSTS_FILE = './etc-hosts'
 
+# Define whether to add Mininet nodes to /etc/hosts file or not
+ADD_ETC_HOSTS = True
+
 # Define whether to start the node managers on the routers or not
 START_NODE_MANAGERS = False
 
@@ -341,12 +344,14 @@ def simpleTest():
             file.write("%s %d\n" % (host, extractHostPid( repr(host) )) )
 
     # Add Mininet nodes to /etc/hosts
-    add_nodes_to_etc_hosts()
+    if ADD_ETC_HOSTS:
+        add_nodes_to_etc_hosts()
 
     CLI( net ) 
 
     # Remove Mininet nodes from /etc/hosts
-    remove_nodes_from_etc_hosts(net)
+    if ADD_ETC_HOSTS:
+        remove_nodes_from_etc_hosts(net)
  
     net.stop() 
     stopAll()
@@ -362,6 +367,11 @@ def parse_arguments():
         '--start-node-managers', dest='start_node_managers',
         action='store_true', default=False,
         help='Define whether to start node manager on routers or not'
+    )
+    parser.add_argument(
+        '--no-etc-hosts', dest='add_etc_hosts',
+        action='store_false', default=True,
+        help='Define whether to add Mininet nodes to /etc/hosts file or not'
     )
     # Parse input parameters
     args = parser.parse_args()
@@ -391,6 +401,8 @@ if __name__ == '__main__':
                   'NODE_MANAGER_GRPC_PORT variable')
             print('NODE_MANAGER_GRPC_PORT variable not set in .env file\n')
             exit(-2)
+    # Define whether to add Mininet nodes to /etc/hosts file or not
+    ADD_ETC_HOSTS = args.add_etc_hosts
     # Tell mininet to print useful information
     setLogLevel('info')
     simpleTest()
