@@ -249,6 +249,11 @@ def remove_nodes_from_etc_hosts(net):
     for host in net.hosts:
         # Remove all the nodes from /etc/hosts
         etc_hosts.remove_all_matching(name=str(host))
+    # Remove entries related to the management network
+    # These entries are in the form *.m (e.g. r1.m, controller.m)
+    # therefore they are not removed during the previous loop
+    for host in net.hosts:
+        etc_hosts.remove_all_matching(name='%s.m' % host)
     # Write changes to /etc/hosts
     etc_hosts.write()
 
