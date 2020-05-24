@@ -282,6 +282,19 @@ def create_topo(my_net):
     add_link(my_net, r6, sw)
     add_link(my_net, r7, sw)
     add_link(my_net, r8, sw)
+    # Connect all the hosts to the management network
+    add_link(my_net, h11, sw)
+    add_link(my_net, h12, sw)
+    add_link(my_net, h13, sw)
+    add_link(my_net, h31, sw)
+    add_link(my_net, h32, sw)
+    add_link(my_net, h33, sw)
+    add_link(my_net, h51, sw)
+    add_link(my_net, h52, sw)
+    add_link(my_net, h53, sw)
+    add_link(my_net, h81, sw)
+    add_link(my_net, h82, sw)
+    add_link(my_net, h83, sw)
 
 
 def add_nodes_to_etc_hosts():

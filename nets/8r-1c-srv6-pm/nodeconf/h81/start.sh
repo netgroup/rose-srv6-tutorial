@@ -9,3 +9,8 @@ GW_ADDR=fd00:0:81::1
 
 ip -6 addr add $IP_ADDR dev $IF_NAME 
 ip -6 route add default via $GW_ADDR dev $IF_NAME
+
+SW_NAME=sw
+MGMT_IF_NAME=$NODE_NAME-$SW_NAME
+MGMT_IP_ADDR=fcfd:0:0:8:1::1/48
+ip -6 addr add $MGMT_IP_ADDR dev $MGMT_IF_NAME
