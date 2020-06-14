@@ -17,7 +17,7 @@ readonly CDIR="${PWD}/${BASE_DIR}/${COMMON_DIR}"
 readonly IPSET_START="${CDIR}/ipset_start.sh"
 
 # script for setting up the env for pfplm using ebpf programs
-readonly EBPF_START="${WDIR}/ebpf_start.sh"
+# readonly EBPF_START="${WDIR}/ebpf_start.sh"
 
 # This file contains the configuration of the node that should be enforced by
 # the controller.
@@ -51,7 +51,9 @@ sysctl -w net.ipv6.conf.all.forwarding=1
   #echo 0 > $i
 #done
 
-source_file_if_defined "${EBPF_START}"
+mount -t bpf bpf /sys/fs/bpf/
+
+# source_file_if_defined "${EBPF_START}"
 source_file_if_defined "${IPSET_START}"
 
 echo "no service integrated-vtysh-config" >> /etc/frr/vtysh.conf
