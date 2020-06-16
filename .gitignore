@@ -4,3 +4,10 @@
 *.log
 *.pid
 *.swp
+
+nets/3routers/starter.sh
+nets/8routers/starter.sh
+nets/8routers-isis-ipv6/starter.sh
+nets/8r-1c-in-band-isis/starter.sh
+nets/8r-1c-out-band-isis/starter.sh
+nets/8r-1c-srv6-pm/starter.sh
