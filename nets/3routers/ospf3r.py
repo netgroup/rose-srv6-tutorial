@@ -5,15 +5,15 @@
 # pylint: disable=missing-class-docstring
 
 import os
-
 import shutil
-# from mininet.topo import Topo
-from mininet.node import Host
-from mininet.net import Mininet
+
 from mininet.cli import CLI
-from mininet.util import dumpNodeConnections
 from mininet.link import Link
 from mininet.log import setLogLevel
+from mininet.net import Mininet
+# from mininet.topo import Topo
+from mininet.node import Host
+from mininet.util import dumpNodeConnections
 
 # BASEDIR = "/home/user/mytests/ospf3routers/nodeconf/"
 BASEDIR = os.getcwd()+"/nodeconf/"
