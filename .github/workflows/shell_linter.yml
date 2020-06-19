@@ -29,3 +29,5 @@ jobs:
         exclude: "./.git/*" # Optional.
         fail_on_error: true
         level: "info"
+        shellcheck_flags: --severity=style --external-sources
+        filter_mode: "nofilter"
