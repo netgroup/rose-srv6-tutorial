@@ -23,7 +23,7 @@ jobs:
       uses: reviewdog/action-shellcheck@v1
       with:
         github_token: ${{ secrets.github_token }}
-        #reporter: github-pr-review # Change reporter.
+        reporter: github-pr-review # Change reporter.
         path: "." # Optional.
         pattern: "*.sh" # Optional.
         exclude: "./.git/*" # Optional.
