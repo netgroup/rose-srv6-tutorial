@@ -51,7 +51,12 @@ sysctl -w net.ipv6.conf.all.forwarding=1
   #echo 0 > $i
 #done
 
-mount -t bpf bpf /sys/fs/bpf/
+# mount the bpf filesystem.
+# Note: childs of the launching (parent) bash can access this instance
+# of the bpf filesystem. If you need to get access to the bpf filesystem
+# (where maps are available), you need to use nsenter with -m and -t
+# that points to the pid of the parent process (launching bash).
+mount -t bpf bpf /sys/fs/bpf/ || exit $?
 
 # source_file_if_defined "${EBPF_START}"
 source_file_if_defined "${IPSET_START}"
