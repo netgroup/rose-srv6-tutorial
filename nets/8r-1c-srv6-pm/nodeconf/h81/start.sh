@@ -1,6 +1,5 @@
 #!/bin/bash
 
-BASE_DIR=/home/user/Progetto/1920-srv6-tutorial/nets/8routers-isis-ipv6/nodeconf
 NODE_NAME=h81
 GW_NAME=r8
 IF_NAME=$NODE_NAME-$GW_NAME
