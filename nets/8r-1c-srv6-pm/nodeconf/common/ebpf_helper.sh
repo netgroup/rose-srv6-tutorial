@@ -3,23 +3,23 @@
 # Error codes
 # @see /usr/include/sysexits.h
 
-readonly EX_OK=0		# /* successful termination */
-readonly EX__BASE=64		# /* base value for error messages */
-readonly EX_USAGE=64		# /* command line usage error */
+# readonly EX_OK=0		# /* successful termination */
+# readonly EX__BASE=64		# /* base value for error messages */
+# readonly EX_USAGE=64		# /* command line usage error */
 readonly EX_DATAERR=65		# /* data format error */
 readonly EX_NOINPUT=66		# /* cannot open input */
-readonly EX_NOUSER=67		# /* addressee unknown */
-readonly EX_NOHOST=68		# /* host name unknown */
-readonly EX_UNAVAILABLE=69	# /* service unavailable */
-readonly EX_SOFTWARE=70		# /* internal software error */
-readonly EX_OSERR=71		# /* system error (e.g., can't fork) */
-readonly EX_OSFILE=72		# /* critical OS file missing */
-readonly EX_CANTCREAT=73	# /* can't create (user) output file */
+# readonly EX_NOUSER=67		# /* addressee unknown */
+# readonly EX_NOHOST=68		# /* host name unknown */
+# readonly EX_UNAVAILABLE=69	# /* service unavailable */
+# readonly EX_SOFTWARE=70		# /* internal software error */
+# readonly EX_OSERR=71		# /* system error (e.g., can't fork) */
+# readonly EX_OSFILE=72		# /* critical OS file missing */
+# readonly EX_CANTCREAT=73	# /* can't create (user) output file */
 readonly EX_IOERR=74		# /* input/output error */
-readonly EX_TEMPFAIL=75		# /* temp failure; user is invited to retry */
-readonly EX_PROTOCOL=76		# /* remote error in protocol */
-readonly EX_NOPERM=77		# /* permission denied */
-readonly EX_CONFIG=78		# /* configuration error */
+# readonly EX_TEMPFAIL=75		# /* temp failure; user is invited to retry */
+# readonly EX_PROTOCOL=76		# /* remote error in protocol */
+# readonly EX_NOPERM=77		# /* permission denied */
+# readonly EX_CONFIG=78		# /* configuration error */
 
 if [ -n "${CDIR+x}" ]; then
 	readonly export EBPF_CLI="${CDIR}/ebpf_py_cli.py"
