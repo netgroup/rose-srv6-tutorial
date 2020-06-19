@@ -1,6 +1,5 @@
 #!/bin/sh
 
-BASE_DIR=/home/user/mytests/ospf3routers/nodeconf
 NODE_NAME=h83
 GW_NAME=r8
 IF_NAME=$NODE_NAME-$GW_NAME

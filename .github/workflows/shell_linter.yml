@@ -1,0 +1,33 @@
+name: Shell Linter
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  shell-lint:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    - name: Shell Linter
+      uses: reviewdog/action-shellcheck@v1
+      with:
+        github_token: ${{ secrets.github_token }}
+        reporter: github-pr-review # Change reporter.
+        path: "." # Optional.
+        pattern: "*.sh" # Optional.
+        exclude: "./.git/*" # Optional.
+        fail_on_error: true
+        level: "info"
+        shellcheck_flags: --severity=style --external-sources
+        filter_mode: "nofilter"
