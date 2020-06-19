@@ -3,23 +3,23 @@
 # Error codes
 # @see /usr/include/sysexits.h
 
-# readonly EX_OK=0		# /* successful termination */
-# readonly EX__BASE=64		# /* base value for error messages */
-# readonly EX_USAGE=64		# /* command line usage error */
+readonly EX_OK=0		# /* successful termination */
+readonly EX__BASE=64		# /* base value for error messages */
+readonly EX_USAGE=64		# /* command line usage error */
 readonly EX_DATAERR=65		# /* data format error */
 readonly EX_NOINPUT=66		# /* cannot open input */
-# readonly EX_NOUSER=67		# /* addressee unknown */
-# readonly EX_NOHOST=68		# /* host name unknown */
-# readonly EX_UNAVAILABLE=69	# /* service unavailable */
-# readonly EX_SOFTWARE=70		# /* internal software error */
-# readonly EX_OSERR=71		# /* system error (e.g., can't fork) */
-# readonly EX_OSFILE=72		# /* critical OS file missing */
-# readonly EX_CANTCREAT=73	# /* can't create (user) output file */
+readonly EX_NOUSER=67		# /* addressee unknown */
+readonly EX_NOHOST=68		# /* host name unknown */
+readonly EX_UNAVAILABLE=69	# /* service unavailable */
+readonly EX_SOFTWARE=70		# /* internal software error */
+readonly EX_OSERR=71		# /* system error (e.g., can't fork) */
+readonly EX_OSFILE=72		# /* critical OS file missing */
+readonly EX_CANTCREAT=73	# /* can't create (user) output file */
 readonly EX_IOERR=74		# /* input/output error */
-# readonly EX_TEMPFAIL=75		# /* temp failure; user is invited to retry */
-# readonly EX_PROTOCOL=76		# /* remote error in protocol */
-# readonly EX_NOPERM=77		# /* permission denied */
-# readonly EX_CONFIG=78		# /* configuration error */
+readonly EX_TEMPFAIL=75		# /* temp failure; user is invited to retry */
+readonly EX_PROTOCOL=76		# /* remote error in protocol */
+readonly EX_NOPERM=77		# /* permission denied */
+readonly EX_CONFIG=78		# /* configuration error */
 
 if [ -n "${CDIR+x}" ]; then
 	readonly export EBPF_CLI="${CDIR}/ebpf_py_cli.py"
@@ -53,7 +53,7 @@ function dev_exists()
 		return ${EX_DATAERR}
 	fi
 
-	ip link show "${ifname}" > /dev/null 2>&1
+	ip link show ${ifname} > /dev/null 2>&1
 	return $?
 }
 
@@ -66,26 +66,26 @@ function move_ip_addr()
 	local res
 	local i
 
-	addrs="$(get_ip_addr "${src_dev}")" || return $?
+	addrs="$(get_ip_addr ${src_dev})" || return $?
 
 	res=0
 	for i in ${addrs}; do
 		# we skip ipv6 link-local addresses
-		echo "${i}" | grep -q -E '^fe80::' && continue;
+		echo ${i} | grep -q -E '^fe80::' && continue;
 
-		ip addr add "${i}" dev "${dst_dev}" || { res=$?; break; }
+		ip addr add ${i} dev ${dst_dev} || { res=$?; break; }
 	done
 
 	if [ ${res} -ne 0 ]; then
-		ip addr flush dev "${dst_dev}" || return $?
+		ip addr flush dev ${dst_dev} || return $?
 		return ${EX_IOERR}
 	fi
 
 	for i in ${addrs}; do
 		# we skip ipv6 link-local addresses
-		echo "${i}" | grep -q -E '^fe80::' && continue
+		echo ${i} | grep -q -E '^fe80::' && continue
 
-		ip addr del "${i}" dev "${src_dev}"
+		ip addr del ${i} dev ${src_dev}
 	done
 
 	return 0
@@ -104,11 +104,11 @@ function clean_netdev()
 	ifname_egr="${ifname}_egr"
 	ifname_br="${ifname}_br"
 
-	dev_exists "${ifname_igr}" && move_ip_addr "${ifname}" "${ifname_igr}"
+	dev_exists ${ifname_igr} && move_ip_addr ${ifname} ${ifname_igr}
 
-	ip link del "${ifname_igr}" > /dev/null 2>&1
+	ip link del ${ifname_igr} > /dev/null 2>&1
 	# we do not need to delete _egr because it's a side of a veth pair
-	ip link del "${ifname_br}" > /dev/null 2>&1
+	ip link del ${ifname_br} > /dev/null 2>&1
 
 	return 0
 }
@@ -124,13 +124,13 @@ function prepare_netdev()
 	dev_exists "${ifname}" || return $?
 
 	# clean the node if needed
-	clean_netdev "${ifname}"
+	clean_netdev ${ifname}
 
 	ifname_igr="${ifname}_igr"
 	ifname_egr="${ifname}_egr"
 	ifname_br="${ifname}_br"
 
-	ip link add dev "${ifname_igr}" type veth peer name "${ifname_egr}" \
+	ip link add dev ${ifname_igr} type veth peer name ${ifname_egr} \
 		|| return $?
 
 	# we create the bridge for interconnecting the ifname_egr with the
@@ -138,26 +138,26 @@ function prepare_netdev()
 	#
 	# NOTE: goto does not exist... so we need to get something similar with
 	# if (true) {  if(..) break; }
-	if true; then
-		ip link add name "${ifname_br}" type bridge \
-			|| { res=$?; return; }
-		ip link set dev "${ifname_egr}" master "${ifname_br}" \
-			|| { res=$?; return; }
-		ip link set dev "${ifname}" master "${ifname_br}" \
-			|| { res=$?; return; }
+	if [ 1 ]; then
+		ip link add name ${ifname_br} type bridge \
+			|| { res=$?; break; }
+		ip link set dev ${ifname_egr} master ${ifname_br} \
+			|| { res=$?; break; }
+		ip link set dev ${ifname} master ${ifname_br} \
+			|| { res=$?; break; }
 
-		ip link set dev "${ifname_br}" up || { res=$?; return; }
-		ip link set dev "${ifname_igr}" up || { res=$?; return; }
-		ip link set dev "${ifname_egr}" up || { res=$?; return; }
+		ip link set dev ${ifname_br} up || { res=$?; break; }
+		ip link set dev ${ifname_igr} up || { res=$?; break; }
+		ip link set dev ${ifname_egr} up || { res=$?; break; }
 	fi
 
 	if [ $res -ne 0 ]; then
 		#clean up
-		clean_node "${ifname}"
+		clean_node ${ifname}
 	fi
 
-	move_ip_addr "${ifname_igr}" "${ifname}" \
-		|| { res=$?; clean_netdev "${ifname}"; return ${res}; }
+	move_ip_addr ${ifname_igr} ${ifname} \
+		|| { res=$?; clean_netdev ${ifname}; return ${res}; }
 
 	return 0
 }
@@ -180,7 +180,7 @@ function prepare_daemon_conf()
 		return ${EX_NOINPUT}
 	fi
 
-	dev_exists "${ifname}" || return $?
+	dev_exists ${ifname} || return $?
 	ifname_igr="${ifname}_igr"
 
 	# i.e: filename from zebra.conf to ebpf_zebra.conf with the full path
@@ -264,7 +264,7 @@ function xdp_pfplm_get_color()
 	ifname_egr="${ifname}_egr"
 
 	color="$("${EBPF_CLI}" get_color "${ifname_egr}")" || return $?
-	echo "${color}"
+	echo ${color}
 
 	return 0
 }

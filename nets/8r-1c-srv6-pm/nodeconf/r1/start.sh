@@ -38,7 +38,7 @@ ISIS_CFG="${WDIR}/isisd.conf"
 ### BEWARE TO EDIT BELOW ###
 ############################
 
-# shellcheck source=../common/commons.sh
+# shellcheck source=nets/8r-1c-srv6-pm/nodeconf/common/commons.sh
 source "${CDIR}/commons.sh" || exit $?
 
 #enable IPv6 forwarding
