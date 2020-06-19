@@ -96,7 +96,7 @@ jobs:
           # Activate virtualenv
           source python${{ matrix.python-version }}-venv/bin/activate
           # Module to be tested
-          module=nets
+          module="nets nets-unmantained nets-in-progress"
           # pylint
           for file in $(find $module -type f); do 
             if [ ${file: -3} == ".py" ]; then
