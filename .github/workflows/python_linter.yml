@@ -64,7 +64,7 @@ jobs:
           # Create a virtualenv
           python -m venv python${{ matrix.python-version }}-venv
           # Activate virtualenv
-          source python${{ matrix.python-version }}-venv
+          source python${{ matrix.python-version }}-venv/bin/activate
 
       ########################
       # Install dependencies #
@@ -72,7 +72,7 @@ jobs:
       - name: Install dependencies
         run: |          
           # Activate virtualenv
-          source python${{ matrix.python-version }}-venv
+          source python${{ matrix.python-version }}-venv/bin/activate
           # Upgrade pip
           python -m pip install --upgrade pip
           # Install linters and other python modules
@@ -84,7 +84,7 @@ jobs:
       - name: Install requirements
         run: |
           # Activate virtualenv
-          source python${{ matrix.python-version }}-venv
+          source python${{ matrix.python-version }}-venv/bin/activate
           # Install requirements
           pip install -r requirements.txt
 
@@ -94,7 +94,7 @@ jobs:
       - name: Python Code Quality and Lint
         run: |
           # Activate virtualenv
-          source python${{ matrix.python-version }}-venv
+          source python${{ matrix.python-version }}-venv/bin/activate
           # Module to be tested
           module=.
           # pylint
