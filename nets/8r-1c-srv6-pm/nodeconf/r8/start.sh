@@ -58,17 +58,17 @@ echo "no service integrated-vtysh-config" >> /etc/frr/vtysh.conf
 chown frr:frrvty "${BASE_DIR}/${NODE_NAME}"
 #chown quagga:quagga "${BASE_DIR}/${NODE_NAME}"
 
-${FRR_PATH}/zebra -f ${ZEBRA_CFG} -d -z ${WDIR}/zebra.sock -i ${WDIR}/zebra.pid
+${FRR_PATH}/zebra -f "${ZEBRA_CFG}" -d -z "${WDIR}"/zebra.sock -i "${WDIR}"/zebra.pid
 
 sleep 1
 
-${FRR_PATH}/isisd -f ${ISIS_CFG} -d -z ${WDIR}/zebra.sock -i ${WDIR}/isisd.pid
+${FRR_PATH}/isisd -f "${ISIS_CFG}" -d -z "${WDIR}"/zebra.sock -i "${WDIR}"/isisd.pid
 
 # enable Segment Routing for IPv6
 sysctl -w net.ipv6.conf.all.seg6_enabled=1
 for dev in $(ip -o -6 a | awk '{ print $2 }' | grep -v "lo")
 do
-   sysctl -w net.ipv6.conf.$dev.seg6_enabled=1
+   sysctl -w net.ipv6.conf."$dev".seg6_enabled=1
 done
 
 # Add punt0 interface
