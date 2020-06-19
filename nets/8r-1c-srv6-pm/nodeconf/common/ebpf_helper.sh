@@ -138,17 +138,17 @@ function prepare_netdev()
 	#
 	# NOTE: goto does not exist... so we need to get something similar with
 	# if (true) {  if(..) break; }
-	if [ 1 ]; then
+	if true; then
 		ip link add name "${ifname_br}" type bridge \
-			|| { res=$?; break; }
+			|| { res=$?; return; }
 		ip link set dev "${ifname_egr}" master "${ifname_br}" \
-			|| { res=$?; break; }
+			|| { res=$?; return; }
 		ip link set dev "${ifname}" master "${ifname_br}" \
-			|| { res=$?; break; }
+			|| { res=$?; return; }
 
-		ip link set dev "${ifname_br}" up || { res=$?; break; }
-		ip link set dev "${ifname_igr}" up || { res=$?; break; }
-		ip link set dev "${ifname_egr}" up || { res=$?; break; }
+		ip link set dev "${ifname_br}" up || { res=$?; return; }
+		ip link set dev "${ifname_igr}" up || { res=$?; return; }
+		ip link set dev "${ifname_egr}" up || { res=$?; return; }
 	fi
 
 	if [ $res -ne 0 ]; then

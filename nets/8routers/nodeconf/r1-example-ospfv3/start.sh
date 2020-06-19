@@ -12,7 +12,7 @@ FRR_PATH=/usr/lib/frr
 #sysctl -w net.ipv4.conf.default.rp_filter=0
 #the following for loop also disables all and default
 #for i in /proc/sys/net/ipv4/conf/*/rp_filter ; do
-  echo 0 > "$i" 
+#  echo 0 > "$i" 
 #done
 
 
