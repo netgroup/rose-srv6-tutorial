@@ -1,0 +1,147 @@
+---
+###########################
+###########################
+## Linter GitHub Actions ##
+###########################
+###########################
+name: Python Linter
+
+#
+# Documentation:
+# https://help.github.com/en/articles/workflow-syntax-for-github-actions
+#
+
+#############################
+# Start the job on all push #
+#############################
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+###############
+# Set the Job #
+###############
+jobs:
+  python-lint:
+    # Name the Job
+    name: Python Linter
+    # Set the agent to run on
+    runs-on: ubuntu-latest
+
+    ###################
+    # Python versions #
+    ###################
+    strategy:
+      matrix:
+        python-version: [3.5, 3.6, 3.7, 3.8]
+    
+    ##################
+    # Load all steps #
+    ##################
+    steps:
+
+      ##########################
+      # Checkout the code base #
+      ##########################
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      #########################
+      # Pick a Python version #
+      #########################
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      ##############################
+      # Set up a Python virtualenv #
+      ##############################
+      - name: Set up Python virtual environment
+        run: |
+          # Create a virtualenv
+          python -m venv python${{ matrix.python-version }}-venv
+          # Activate virtualenv
+          source python${{ matrix.python-version }}-venv
+
+      ########################
+      # Install dependencies #
+      ########################
+      - name: Install dependencies
+        run: |          
+          # Activate virtualenv
+          source python${{ matrix.python-version }}-venv
+          # Upgrade pip
+          python -m pip install --upgrade pip
+          # Install linters and other python modules
+          pip install pylint pycodestyle flake8 black mypy isort setuptools wheel pytest
+
+      ########################
+      # Install requirements #
+      ########################
+      - name: Install requirements
+        run: |
+          # Activate virtualenv
+          source python${{ matrix.python-version }}-venv
+          # Install requirements
+          pip install -r requirements.txt
+
+      ################################
+      # Run Linter against code base #
+      ################################
+      - name: Python Code Quality and Lint
+        run: |
+          # Activate virtualenv
+          source python${{ matrix.python-version }}-venv
+          # Module to be tested
+          module=.
+          # pylint
+          for file in $(find $module -type f); do 
+            if [ ${file: -3} == ".py" ]; then
+              echo Running: pylint $file
+              pylint $file
+              if [ "$?" = "0" ]; then echo "Pylint ok"; else echo "Pylint error"; exit $exit_code; fi
+            fi
+          done;
+          # pycodestyle
+          for file in $(find $module -type f); do 
+            if [ ${file: -3} == ".py" ]; then
+              echo Running: pycodestyle $file
+              pycodestyle $file
+              if [ "$?" = "0" ]; then echo "pycodestyle ok"; else echo "pycodestyle error"; exit $exit_code; fi
+            fi
+          done;
+          # flake8
+          for file in $(find $module -type f); do 
+            if [ ${file: -3} == ".py" ]; then
+              echo Running: flake8 $file
+              flake8 $file
+              if [ "$?" = "0" ]; then echo "Flake8 ok"; else echo "Flake8 error"; exit $exit_code; fi
+            fi
+          done;
+          # black
+          #for file in $(find $module -type f); do 
+          #  if [ ${file: -3} == ".py" ]; then
+          #    echo Running: black --check $file
+          #    black --check $file
+          #    if [ "$?" = "0" ]; then echo "Black ok"; else echo "Black error"; exit $exit_code; fi
+          #  fi
+          #done;
+          # mypy
+          #for file in $(find $module -type f); do 
+          #  if [ ${file: -3} == ".py" ]; then
+          #    echo Running: mypy $file
+          #    mypy $file
+          #    if [ "$?" = "0" ]; then echo "mypy ok"; else echo "mypy error"; exit $exit_code; fi
+          #  fi
+          #done;
+          # isort
+          for file in $(find $module -type f); do 
+            if [ ${file: -3} == ".py" ]; then
+              echo Running: isort -rc $file -c --diff
+              isort -rc $file -c --diff --project $file
+              if [ "$?" = "0" ]; then echo "isort ok"; else echo "isort error"; exit $exit_code; fi
+            fi
+          done;
