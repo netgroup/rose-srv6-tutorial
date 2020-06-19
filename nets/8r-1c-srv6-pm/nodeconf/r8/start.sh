@@ -38,6 +38,7 @@ ISIS_CFG="${WDIR}/isisd.conf"
 ### BEWARE TO EDIT BELOW ###
 ############################
 
+# shellcheck source=../common/commons.sh
 source "${CDIR}/commons.sh" || exit $?
 
 #enable IPv6 forwarding
