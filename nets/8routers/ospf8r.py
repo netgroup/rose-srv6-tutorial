@@ -1,19 +1,23 @@
 #!/usr/bin/python
 
+# pylint: disable=missing-module-docstring
+# pylint: disable=missing-function-docstring
+# pylint: disable=missing-class-docstring
+
 import os
-
-from argparse import ArgumentParser
-import python_hosts
 import shutil
-from mininet.topo import Topo
-from mininet.node import Host
-from mininet.net import Mininet
-from mininet.cli import CLI
-from mininet.util import dumpNodeConnections
-from mininet.link import Link
-from mininet.log import setLogLevel
+from argparse import ArgumentParser
 
-#BASEDIR = "/home/user/mytests/ospf3routers/nodeconf/"
+import python_hosts
+from mininet.cli import CLI
+# from mininet.link import Link
+from mininet.log import setLogLevel
+from mininet.net import Mininet
+# from mininet.topo import Topo
+from mininet.node import Host
+from mininet.util import dumpNodeConnections
+
+# BASEDIR = "/home/user/mytests/ospf3routers/nodeconf/"
 BASEDIR = os.getcwd()+"/nodeconf/"
 OUTPUT_PID_TABLE_FILE = "/tmp/pid_table_file.txt"
 
@@ -26,6 +30,7 @@ ETC_HOSTS_FILE = './etc-hosts'
 # Define whether to add Mininet nodes to /etc/hosts file or not
 ADD_ETC_HOSTS = True
 
+
 class BaseNode(Host):
 
     def __init__(self, name, *args, **kwargs):
@@ -34,27 +39,29 @@ class BaseNode(Host):
         self.dir = "/tmp/%s" % name
         self.nets = []
         if not os.path.exists(self.dir):
-            os.makedirs(self.dir) 
+            os.makedirs(self.dir)
 
     def config(self, **kwargs):
+        # pylint: disable=arguments-differ
+
         # Init steps
         Host.config(self, **kwargs)
         # Iterate over the interfaces
-        first = True
+        # first = True
         for intf in self.intfs.values():
             # Remove any configured address
-            self.cmd('ifconfig %s 0' %intf.name)
+            self.cmd('ifconfig %s 0' % intf.name)
             # # For the first one, let's configure the mgmt address
             # if first:
             #   first = False
             #   self.cmd('ip a a %s dev %s' %(kwargs['mgmtip'], intf.name))
-        #let's write the hostname in /var/mininet/hostname
+        # let's write the hostname in /var/mininet/hostname
         self.cmd("echo '" + self.name + "' > "+PRIVDIR+"/hostname")
-        if os.path.isfile(BASEDIR+self.name+"/start.sh") :
-            self.cmd('source %s' %BASEDIR+self.name+"/start.sh")
+        if os.path.isfile(BASEDIR+self.name+"/start.sh"):
+            self.cmd('source %s' % BASEDIR+self.name+"/start.sh")
 
     def cleanup(self):
-        def remove_if_exists (filename):
+        def remove_if_exists(filename):
             if os.path.exists(filename):
                 os.remove(filename)
 
@@ -98,11 +105,16 @@ class Router(BaseNode):
 
 # the add_link function creates a link and assigns the interface names
 # as node1-node2 and node2-node1
-def add_link (my_net,node1, node2):
+
+
+def add_link(my_net, node1, node2):
     my_net.addLink(node1, node2, intfName1=node1.name+'-'+node2.name,
-                       intfName2=node2.name+'-'+node1.name)
+                   intfName2=node2.name+'-'+node1.name)
+
 
 def create_topo(my_net):
+    # pylint: disable=invalid-name, too-many-locals
+
     h11 = my_net.addHost(name='h11', cls=BaseNode)
     h12 = my_net.addHost(name='h12', cls=BaseNode)
     h13 = my_net.addHost(name='h13', cls=BaseNode)
@@ -132,56 +144,56 @@ def create_topo(my_net):
     r7 = my_net.addHost(name='r7', cls=Router)
     r8 = my_net.addHost(name='r8', cls=Router)
 
-    #note that if the interface names are not provided,
-    #the order of adding link will determine the
-    #naming of the interfaces (e.g. on r1: r1-eth0, r1-eth1, r1-eth2...)
+    # note that if the interface names are not provided,
+    # the order of adding link will determine the
+    # naming of the interfaces (e.g. on r1: r1-eth0, r1-eth1, r1-eth2...)
     # it is possible to provide names as follows
     # Link(h1, r1, intfName1='h1-eth0', intfName2='r1-eth0')
     # the add_link function creates a link and assigns the interface names
     # as node1-node2 and node2-node1
 
-    #hosts of r1
-    add_link(my_net, h11,r1)
-    add_link(my_net, h12,r1)
-    add_link(my_net, h13,r1)
-    #r1 - r2
-    add_link(my_net, r1,r2)
-    #datacenters of r2
-    add_link(my_net, hdc1,r2)
-    #r2 - r3
-    add_link(my_net, r2,r3)
-    #r2 - r7
-    add_link(my_net, r2,r7)
-    #hosts of r3
-    add_link(my_net, h31,r3)
-    add_link(my_net, h32,r3)
-    add_link(my_net, h33,r3)
-    #r3 - r4
-    add_link(my_net, r3,r4)
-    #r4 - r5
-    add_link(my_net, r4,r5)
-    #r4 - r6
-    add_link(my_net, r4,r6)
-    #hosts of r5
-    add_link(my_net, h51,r5)
-    add_link(my_net, h52,r5)
-    add_link(my_net, h53,r5)
-    #datacenters of r5
-    add_link(my_net, hdc3,r5)
-    #r5 - r6
-    add_link(my_net, r5,r6)
-    #r6 - r7
-    add_link(my_net, r6,r7)
-    #r6 - r8
-    add_link(my_net, r6,r8)
-    #r7 - r8
-    add_link(my_net, r7,r8)
-    #hosts of r8
-    add_link(my_net, h81,r8)
-    add_link(my_net, h82,r8)
-    add_link(my_net, h83,r8)
-    #datacenters of r8
-    add_link(my_net, hdc2,r8)
+    # hosts of r1
+    add_link(my_net, h11, r1)
+    add_link(my_net, h12, r1)
+    add_link(my_net, h13, r1)
+    # r1 - r2
+    add_link(my_net, r1, r2)
+    # datacenters of r2
+    add_link(my_net, hdc1, r2)
+    # r2 - r3
+    add_link(my_net, r2, r3)
+    # r2 - r7
+    add_link(my_net, r2, r7)
+    # hosts of r3
+    add_link(my_net, h31, r3)
+    add_link(my_net, h32, r3)
+    add_link(my_net, h33, r3)
+    # r3 - r4
+    add_link(my_net, r3, r4)
+    # r4 - r5
+    add_link(my_net, r4, r5)
+    # r4 - r6
+    add_link(my_net, r4, r6)
+    # hosts of r5
+    add_link(my_net, h51, r5)
+    add_link(my_net, h52, r5)
+    add_link(my_net, h53, r5)
+    # datacenters of r5
+    add_link(my_net, hdc3, r5)
+    # r5 - r6
+    add_link(my_net, r5, r6)
+    # r6 - r7
+    add_link(my_net, r6, r7)
+    # r6 - r8
+    add_link(my_net, r6, r8)
+    # r7 - r8
+    add_link(my_net, r7, r8)
+    # hosts of r8
+    add_link(my_net, h81, r8)
+    add_link(my_net, h82, r8)
+    add_link(my_net, h83, r8)
+    # datacenters of r8
+    add_link(my_net, hdc2, r8)
 
 
 def add_nodes_to_etc_hosts():
@@ -190,7 +202,8 @@ def add_nodes_to_etc_hosts():
     # Import host-ip mapping defined in etc-hosts file
     count = etc_hosts.import_file(ETC_HOSTS_FILE)
     # Print results
-    count = count['add_result']['ipv6_count'] + count['add_result']['ipv4_count']
+    count = count['add_result']['ipv6_count'] + \
+        count['add_result']['ipv4_count']
     print('*** Added %s entries to /etc/hosts\n' % count)
 
 
@@ -205,51 +218,50 @@ def remove_nodes_from_etc_hosts(net):
     etc_hosts.write()
 
 
-def stopAll():
+def stop_all():
     # Clean Mininet emulation environment
     os.system('sudo mn -c')
     # Kill all the started daemons
     os.system('sudo killall sshd zebra ospfd')
 
-def extractHostPid (dumpline):
+
+def extract_host_pid(dumpline):
     temp = dumpline[dumpline.find('pid=')+4:]
-    return int(temp [:len(temp)-2])
+    return int(temp[:len(temp)-2])
 
 
-    
-def simpleTest():
+def simple_test():
     "Create and test a simple network"
 
-    #topo = RoutersTopo()
-    #net = Mininet(topo=topo, build=False, controller=None)
+    # topo = RoutersTopo()
+    # net = Mininet(topo=topo, build=False, controller=None)
     net = Mininet(topo=None, build=False, controller=None)
     create_topo(net)
 
     net.build()
     net.start()
 
-
     print("Dumping host connections")
     dumpNodeConnections(net.hosts)
-    #print "Testing network connectivity"
-    #net.pingAll()
+    # print "Testing network connectivity"
+    # net.pingAll()
 
-    with open(OUTPUT_PID_TABLE_FILE,"w") as file:
+    with open(OUTPUT_PID_TABLE_FILE, "w") as file:
         for host in net.hosts:
-            file.write("%s %d\n" % (host, extractHostPid( repr(host) )) )
+            file.write("%s %d\n" % (host, extract_host_pid(repr(host))))
 
     # Add Mininet nodes to /etc/hosts
     if ADD_ETC_HOSTS:
         add_nodes_to_etc_hosts()
 
-    CLI( net ) 
+    CLI(net)
 
     # Remove Mininet nodes from /etc/hosts
     if ADD_ETC_HOSTS:
         remove_nodes_from_etc_hosts(net)
 
-    net.stop() 
-    stopAll()
+    net.stop()
+    stop_all()
 
 
 def parse_arguments():
@@ -269,12 +281,16 @@ def parse_arguments():
     return args
 
 
-
-if __name__ == '__main__':
+def __main():
+    global ADD_ETC_HOSTS  # pylint: disable=global-statement
     # Parse command-line arguments
     args = parse_arguments()
     # Define whether to add Mininet nodes to /etc/hosts file or not
     ADD_ETC_HOSTS = args.add_etc_hosts
     # Tell mininet to print useful information
     setLogLevel('info')
-    simpleTest()
+    simple_test()
+
+
+if __name__ == '__main__':
+    __main()

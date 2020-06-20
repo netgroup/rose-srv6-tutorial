@@ -17,7 +17,7 @@ readonly CDIR="${PWD}/${BASE_DIR}/${COMMON_DIR}"
 readonly IPSET_START="${CDIR}/ipset_start.sh"
 
 # script for setting up the env for pfplm using ebpf programs
-readonly EBPF_START="${WDIR}/ebpf_start.sh"
+# readonly EBPF_START="${WDIR}/ebpf_start.sh"
 
 # This file contains the configuration of the node that should be enforced by
 # the controller.
@@ -38,6 +38,7 @@ ISIS_CFG="${WDIR}/isisd.conf"
 ### BEWARE TO EDIT BELOW ###
 ############################
 
+# shellcheck source=nets/8r-1c-srv6-pm/nodeconf/common/commons.sh
 source "${CDIR}/commons.sh" || exit $?
 
 #enable IPv6 forwarding
@@ -51,24 +52,31 @@ sysctl -w net.ipv6.conf.all.forwarding=1
   #echo 0 > $i
 #done
 
-source_file_if_defined "${EBPF_START}"
+# mount the bpf filesystem.
+# Note: childs of the launching (parent) bash can access this instance
+# of the bpf filesystem. If you need to get access to the bpf filesystem
+# (where maps are available), you need to use nsenter with -m and -t
+# that points to the pid of the parent process (launching bash).
+mount -t bpf bpf /sys/fs/bpf/ || exit $?
+
+# source_file_if_defined "${EBPF_START}"
 source_file_if_defined "${IPSET_START}"
 
 echo "no service integrated-vtysh-config" >> /etc/frr/vtysh.conf
 chown frr:frrvty "${BASE_DIR}/${NODE_NAME}"
 #chown quagga:quagga "${BASE_DIR}/${NODE_NAME}"
 
-${FRR_PATH}/zebra -f ${ZEBRA_CFG} -d -z ${WDIR}/zebra.sock -i ${WDIR}/zebra.pid
+${FRR_PATH}/zebra -f "${ZEBRA_CFG}" -d -z "${WDIR}"/zebra.sock -i "${WDIR}"/zebra.pid
 
 sleep 1
 
-${FRR_PATH}/isisd -f ${ISIS_CFG} -d -z ${WDIR}/zebra.sock -i ${WDIR}/isisd.pid
+${FRR_PATH}/isisd -f "${ISIS_CFG}" -d -z "${WDIR}"/zebra.sock -i "${WDIR}"/isisd.pid
 
 # enable Segment Routing for IPv6
 sysctl -w net.ipv6.conf.all.seg6_enabled=1
 for dev in $(ip -o -6 a | awk '{ print $2 }' | grep -v "lo")
 do
-   sysctl -w net.ipv6.conf.$dev.seg6_enabled=1
+   sysctl -w net.ipv6.conf."$dev".seg6_enabled=1
 done
 
 # Add punt0 interface

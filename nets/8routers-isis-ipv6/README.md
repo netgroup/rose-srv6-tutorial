@@ -279,7 +279,6 @@ Currently IPv6 forwarding is not explicitly enabled in start.sh, we have to conf
 
 Example of configuration of start.sh
 
-BASE_DIR=/home/user/Progetto/1920-srv6-tutorial/nets/8routers-isis-ipv6/nodeconf
 NODE_NAME=h11
 GW_NAME=r1
 IF_NAME=$NODE_NAME-$GW_NAME
