@@ -1,5 +1,10 @@
 # 8routers-isis-ipv6 Topology
 
+A Mininet topology with 8 routers running IS-IS routing protocol, 12 hosts and 3 datacenters.
+
+This topology has been used in [ROSE-SRv6 tutorial on Linux - Part 1](https://docs.google.com/document/d/18bVMeJ9SHgaFQwcIPgBOWBgP6ayUpyNNFNqRL0MhWgo/edit?pli=1#heading=h.pht83iagtse2).
+
+
 SMART INTRODUCTION LINK ---> https://drive.google.com/file/d/18PumHFw6o3df5-_yPtOVw4Zem8RDEjTr/view?usp=sharing
 
 
