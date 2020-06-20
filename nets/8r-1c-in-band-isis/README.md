@@ -1,15 +1,30 @@
-# 1920-srv6-tutorial
+# 8r-1c-in-band-isis Topology
 
-SMART INTRODUCTION LINK ---> https://drive.google.com/file/d/18PumHFw6o3df5-_yPtOVw4Zem8RDEjTr/view?usp=sharing
+A Mininet topology with 8 routers running IS-IS routing protocol, 12 hosts, 3 datacenters and a controller connected in-band to one router.
 
+This topology has been used in [ROSE-SRv6 tutorial on Linux - Part 2](https://docs.google.com/document/d/1izO3H8dUt7VoemXtcH-RG4cL127tG9m48edOdFFmktU/edit#heading=h.972o6w1xrdpp).
+
+## Topology overview
+
+![Alt Topology](docs/images/topology.png)
+
+## Start the topology
+
+```
+python isis8d.py
+```
+
+## Description
 
 ```text
 
 In folder nodeconf/ 
-	- for each host and router one folder
-	- one folder for the controller
+	- for each host, datacenter, router and  controller one folder
 	- host folders contain start.sh for each host
 		- sets IPv6 address for hosts
+		- adds IPv6 routing to gateway
+	- datacenter folders contain start.sh for each datacenter
+		- sets IPv6 address for datecenters
 		- adds IPv6 routing to gateway
 	- router folders contain 
 		- zebra.conf
@@ -19,7 +34,7 @@ In folder nodeconf/
 		- start.sh
 			- enables IPv6 forwarding
 			- executes zebra.conf and isisd.conf
-	- controller folder contains start.sh
+	- the controller folder contains start.sh
 		- sets IPv6 address for the controller
 		- adds IPv6 routing to gateway
 
@@ -50,6 +65,12 @@ host - router links:
 	h82 - r8: fd00:0:82::2/64	r8 - h82: fd00:0:82::1/64
 	h83 - r8: fd00:0:83::2/64	r8 - h83: fd00:0:83::1/64
 
+datacenter - router links:
+
+	hdc1 - r2: fcff:2:1::2/48	r2 - hdc1: fcff:2:1::1/48
+	hdc2 - r8: fcff:8:1::2/48	r8 - hdc2: fcff:8:1::1/48
+	hdc3 - r5: fcff:5:1::2/48	r5 - hdc3: fcff:5:1::1/48
+
 router - router links:
 	
 	r1 -r2: fcf0:0:1:2::1/64	r2 - r1: fcf0:0:1:2::2/64
@@ -79,6 +100,8 @@ router localhost
     r8 fcff:8::1
 
 ( The addressing plan is explained in https://docs.google.com/document/d/15giV53fH_eDuWadOxzjPVzlr-a7Rn65MpCbz9QKs7JI/edit )
+
+Note that datacenters are special hosts, which have a public address.
 
 ------Tunnel examples -------------
 1) Create a bidirectional tunnel between h11 and h83, passing through router r4
@@ -124,6 +147,8 @@ we use a decap SID in r8 and in r1 with the End.DT6 behavior, the SID used is fc
 table 254 corresponds to the "main" routing table, using recent version of ip command
 we can use table name instead of table id, for example
 on r8: ip -6 route add fcff:8::100 encap seg6local action End.DT6 table main dev r8-h83
+
+ROSE-SRv6 tutorial on Linux - Part 2 (https://docs.google.com/document/d/1izO3H8dUt7VoemXtcH-RG4cL127tG9m48edOdFFmktU/edit#heading=h.972o6w1xrdpp) shows how to use a Controller to setup the SRv6 tunnels.
 
 
 
@@ -282,6 +307,19 @@ GW_ADDR=fd00:0:11::1
 
 ip -6 addr add $IP_ADDR dev $IF_NAME 
 ip -6 route add default via $GW_ADDR dev $IF_NAME
+
+----Configuration of the Controller----
+
+The controller has a configuration file called start.sh in which we set the IP address and the gateway.
+
+NODE_NAME=controller
+GW_NAME=r2
+IF_NAME=$NODE_NAME-$GW_NAME
+IP_ADDR=fcff:2:c::2/48
+GW_ADDR=fcff:2:c::1
+
+ip -6 addr add $IP_ADDR dev $IF_NAME 
+ip -6 route add fc00::/8 via $GW_ADDR dev $IF_NAME
 
 ----Addressing----
 
