@@ -86,6 +86,24 @@ router localhost
 
 Note that datacenters are special hosts, which have a public address.
 
+
+The file etc-hosts in the topology folder maps each IP address to its hostname.
+
+For example,
+fcff:1::1       r1
+fd00:0:11::2    h11
+fcff:2:1::2     hdc1
+...
+
+When you start the topology, the entries defined in this file are loaded and added to the system /etc/hosts file.
+
+This allows you to ping the nodes using their hostnames instead of the IP addresses:
+h11# ping6 h83
+h83# ping6 h11
+
+The entries are automatically removed from the /etc/hosts file when the emulation is stopped.
+
+
 ------Tunnel examples -------------
 1) Create a bidirectional tunnel between h11 and h83, passing through router r4
 
