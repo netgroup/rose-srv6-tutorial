@@ -8,6 +8,7 @@ A Mininet topology with 8 routers running IS-IS routing protocol, 12 hosts, 3 da
 
 ## Start the topology
 
+To start the topology:
 ```
 python isis8d.py
 ```

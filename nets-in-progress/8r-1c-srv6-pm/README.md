@@ -10,6 +10,7 @@ This topology is the same as 8r-1c-out-band, but same nodes are configured to ru
 
 ## Start the topology
 
+To start the topology:
 ```
 python isis8d.py
 ```

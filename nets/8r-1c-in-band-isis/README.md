@@ -10,6 +10,7 @@ This topology has been used in [ROSE-SRv6 tutorial on Linux - Part 2](https://do
 
 ## Start the topology
 
+To start the topology:
 ```
 python isis8d.py
 ```
