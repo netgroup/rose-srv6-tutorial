@@ -1,15 +1,29 @@
-# 1920-srv6-tutorial
+# 8r-1c-out-band-isis Topology
 
-SMART INTRODUCTION LINK ---> https://drive.google.com/file/d/18PumHFw6o3df5-_yPtOVw4Zem8RDEjTr/view?usp=sharing
+A Mininet topology with 8 routers running IS-IS routing protocol, 12 hosts, 3 datacenters and a controller connected out-band to all the routers and hosts of the network.
 
+## Topology overview
+
+![Alt Topology](docs/images/topology.png)
+
+## Start the topology
+
+To start the topology:
+```
+python isis8d.py
+```
+
+## Description
 
 ```text
 
 In folder nodeconf/ 
-	- for each host and router one folder
-	- one folder for the controller
+	- for each host, datacenter, router and  controller one folder
 	- host folders contain start.sh for each host
 		- sets IPv6 address for hosts
+		- adds IPv6 routing to gateway
+	- datacenter folders contain start.sh for each datacenter
+		- sets IPv6 address for datecenters
 		- adds IPv6 routing to gateway
 	- router folders contain 
 		- zebra.conf
@@ -19,7 +33,7 @@ In folder nodeconf/
 		- start.sh
 			- enables IPv6 forwarding
 			- executes zebra.conf and isisd.conf
-	- controller folder contains start.sh
+	- the controller folder contains start.sh
 		- sets IPv6 address for the controller
 
 
@@ -49,6 +63,12 @@ host - router links:
 	h82 - r8: fd00:0:82::2/64	r8 - h82: fd00:0:82::1/64
 	h83 - r8: fd00:0:83::2/64	r8 - h83: fd00:0:83::1/64
 
+datacenter - router links:
+
+	hdc1 - r2: fcff:2:1::2/48	r2 - hdc1: fcff:2:1::1/48
+	hdc2 - r8: fcff:8:1::2/48	r8 - hdc2: fcff:8:1::1/48
+	hdc3 - r5: fcff:5:1::2/48	r5 - hdc3: fcff:5:1::1/48
+
 router - router links:
 	
 	r1 -r2: fcf0:0:1:2::1/64	r2 - r1: fcf0:0:1:2::2/64
@@ -64,18 +84,18 @@ router - router links:
 
 controller - switch links:
 
-	controller - sw: fcfd:0:0:fd::1/48
+	controller - sw: fcfd:0:0:fd::1/48	sw - controller: fcfd:0:0:fd::2/48
 
 router - switch links:
 
-	r1 - sw: fcfd:0:0:1::1/48
-	r2 - sw: fcfd:0:0:2::1/48
-	r3 - sw: fcfd:0:0:3::1/48
-	r4 - sw: fcfd:0:0:4::1/48
-	r5 - sw: fcfd:0:0:5::1/48
-	r6 - sw: fcfd:0:0:6::1/48
-	r7 - sw: fcfd:0:0:7::1/48
-	r8 - sw: fcfd:0:0:8::1/48
+	r1 - sw: fcfd:0:0:1::1/48	sw - r1: fcfd:0:0:1::2/48
+	r2 - sw: fcfd:0:0:2::1/48	sw - r1: fcfd:0:0:2::2/48
+	r3 - sw: fcfd:0:0:3::1/48	sw - r1: fcfd:0:0:3::2/48
+	r4 - sw: fcfd:0:0:4::1/48	sw - r1: fcfd:0:0:4::2/48
+	r5 - sw: fcfd:0:0:5::1/48	sw - r1: fcfd:0:0:5::2/48
+	r6 - sw: fcfd:0:0:6::1/48	sw - r1: fcfd:0:0:6::2/48
+	r7 - sw: fcfd:0:0:7::1/48	sw - r1: fcfd:0:0:7::2/48
+	r8 - sw: fcfd:0:0:8::1/48	sw - r1: fcfd:0:0:8::2/48
 	
 router localhost
 
@@ -89,6 +109,27 @@ router localhost
     r8 fcff:8::1
 
 ( The addressing plan is explained in https://docs.google.com/document/d/15giV53fH_eDuWadOxzjPVzlr-a7Rn65MpCbz9QKs7JI/edit )
+
+Note that datacenters are special hosts, which have a public address.
+
+
+The file etc-hosts in the topology folder maps each node to its hostname.
+
+For example,
+fcff:1::1       r1
+fd00:0:11::2    h11
+fcff:2:1::2     hdc1
+fcfd:0:0:fd::1	controller.m		# .m suffix is used for the management addresses
+...
+
+When you start the topology, the entries defined in this file are loaded and added to the system /etc/hosts file.
+
+This allows you to ping the nodes using their hostnames instead of the IP addresses:
+h11# ping6 h83
+h83# ping6 h11
+
+The entries are automatically removed from the /etc/hosts file when the emulation is stopped.
+
 
 ------Tunnel examples -------------
 1) Create a bidirectional tunnel between h11 and h83, passing through router r4
@@ -291,6 +332,17 @@ GW_ADDR=fd00:0:11::1
 
 ip -6 addr add $IP_ADDR dev $IF_NAME 
 ip -6 route add default via $GW_ADDR dev $IF_NAME
+
+----Configuration of the Controller----
+
+The controller has a configuration file called start.sh in which we set the IP address. Since the controller is connected to the other nodes through a switch, the gateway is not required.
+
+NODE_NAME=controller
+SW_NAME=sw
+IF_NAME=$NODE_NAME-$SW_NAME
+IP_ADDR=fcfd:0:0:fd::1/48
+
+ip -6 addr add $IP_ADDR dev $IF_NAME
 
 ----Addressing----
 
