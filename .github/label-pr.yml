@@ -22,9 +22,9 @@
   labels: ["topology/8routers-isis-ipv6"]
 - regExp: "^nets-unmantained/8r-1c-out-band-isis/"
   labels: ["topology/8r-1c-out-band-isis"]
-- regExp: "^nets/3routers/"
+- regExp: "^nets-unmantained/3routers/"
   labels: ["topology/3routers"]
-- regExp: "^nets/8routers/"
+- regExp: "^nets-unmantained/8routers/"
   labels: ["topology/8routers"]
 - regExp: "^nets-in-progress/8r-1c-srv6-pm/"
   labels: ["topology/8r-1c-srv6-pm"]
