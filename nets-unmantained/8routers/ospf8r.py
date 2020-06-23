@@ -18,7 +18,7 @@ from mininet.node import Host
 from mininet.util import dumpNodeConnections
 
 # BASEDIR = "/home/user/mytests/ospf3routers/nodeconf/"
-BASEDIR = os.getcwd()+"/nodeconf/"
+BASEDIR = os.getcwd() + "/nodeconf/"
 OUTPUT_PID_TABLE_FILE = "/tmp/pid_table_file.txt"
 
 PRIVDIR = '/var/priv'
@@ -56,9 +56,9 @@ class BaseNode(Host):
             #   first = False
             #   self.cmd('ip a a %s dev %s' %(kwargs['mgmtip'], intf.name))
         # let's write the hostname in /var/mininet/hostname
-        self.cmd("echo '" + self.name + "' > "+PRIVDIR+"/hostname")
-        if os.path.isfile(BASEDIR+self.name+"/start.sh"):
-            self.cmd('source %s' % BASEDIR+self.name+"/start.sh")
+        self.cmd("echo '" + self.name + "' > " + PRIVDIR + "/hostname")
+        if os.path.isfile(BASEDIR + self.name + "/start.sh"):
+            self.cmd('source %s' % BASEDIR + self.name + "/start.sh")
 
     def cleanup(self):
         def remove_if_exists(filename):
@@ -70,13 +70,13 @@ class BaseNode(Host):
         if os.path.exists(self.dir):
             shutil.rmtree(self.dir)
 
-        remove_if_exists(BASEDIR+self.name+"/zebra.pid")
-        remove_if_exists(BASEDIR+self.name+"/zebra.log")
-        remove_if_exists(BASEDIR+self.name+"/zebra.sock")
-        remove_if_exists(BASEDIR+self.name+"/ospf6d.pid")
-        remove_if_exists(BASEDIR+self.name+"/ospf6d.log")
-        remove_if_exists(BASEDIR+self.name+"/ospfd.log")
-        remove_if_exists(BASEDIR+self.name+"/ospfd.pid")
+        remove_if_exists(BASEDIR + self.name + "/zebra.pid")
+        remove_if_exists(BASEDIR + self.name + "/zebra.log")
+        remove_if_exists(BASEDIR + self.name + "/zebra.sock")
+        remove_if_exists(BASEDIR + self.name + "/ospf6d.pid")
+        remove_if_exists(BASEDIR + self.name + "/ospf6d.log")
+        remove_if_exists(BASEDIR + self.name + "/ospfd.log")
+        remove_if_exists(BASEDIR + self.name + "/ospfd.pid")
 
         remove_if_exists(OUTPUT_PID_TABLE_FILE)
 
@@ -108,8 +108,8 @@ class Router(BaseNode):
 
 
 def add_link(my_net, node1, node2):
-    my_net.addLink(node1, node2, intfName1=node1.name+'-'+node2.name,
-                   intfName2=node2.name+'-'+node1.name)
+    my_net.addLink(node1, node2, intfName1=node1.name + '-' + node2.name,
+                   intfName2=node2.name + '-' + node1.name)
 
 
 def create_topo(my_net):
@@ -226,8 +226,8 @@ def stop_all():
 
 
 def extract_host_pid(dumpline):
-    temp = dumpline[dumpline.find('pid=')+4:]
-    return int(temp[:len(temp)-2])
+    temp = dumpline[dumpline.find('pid=') + 4:]
+    return int(temp[:len(temp) - 2])
 
 
 def simple_test():
