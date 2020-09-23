@@ -1,0 +1,3 @@
+[submodule "nets-in-progress/8r-1c-srv6-usid/usid-interop-testbed"]
+	path = nets-in-progress/8r-1c-srv6-usid/usid-interop-testbed
+	url = https://github.com/netgroup/usid-interop-testbed.git
