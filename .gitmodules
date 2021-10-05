@@ -1,0 +1,3 @@
+[submodule "nets-in-progress/riolo-8r-1c-srv6-pm/twampy"]
+	path = nets-in-progress/riolo-8r-1c-srv6-pm/twampy
+	url = https://github.com/nokia/twampy
