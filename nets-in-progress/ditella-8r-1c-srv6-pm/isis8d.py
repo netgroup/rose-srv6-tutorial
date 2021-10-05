@@ -48,7 +48,6 @@ if NODE_MANAGER_PATH is not None:
 NODE_MANAGER_GRPC_PORT = os.getenv('NODE_MANAGER_GRPC_PORT', None)
 
 
-
 class BaseNode(Host):
 
     def __init__(self, name, *args, **kwargs):
@@ -343,7 +342,8 @@ def simple_test():
         add_nodes_to_etc_hosts()
 
     # This waiting time is needed because after several tests we noticed that
-    # it is needed some time to let each node of the topology to be set up correctly
+    # it is needed some time to let each node of the topology to be set up
+    # correctly
     print("Waiting the components of the topology to set up correctly (40 seconds)")
     sleep(40)
 
@@ -412,7 +412,6 @@ def __main():
     # Tell mininet to print useful information
     setLogLevel('info')
     simple_test()
-
 
 
 if __name__ == '__main__':
