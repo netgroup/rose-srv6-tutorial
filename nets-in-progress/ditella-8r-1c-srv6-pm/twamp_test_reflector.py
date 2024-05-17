@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from scapy.all import *
-from scapy.layers.inet import IP,UDP
+from scapy.layers.inet import IP, UDP
 from scapy.layers.inet6 import IPv6
 
 import twamp

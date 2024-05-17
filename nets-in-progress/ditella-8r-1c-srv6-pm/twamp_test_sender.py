@@ -1,6 +1,6 @@
 
 from scapy.all import *
-from scapy.layers.inet import IP,UDP
+from scapy.layers.inet import IP, UDP
 
 from scapy.layers.inet6 import IPv6
 import twamp
@@ -19,4 +19,3 @@ t_dm.start()
 
 time.sleep(2)
 sender.sendSenderDelayPacket()
-
