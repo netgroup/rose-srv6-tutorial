@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Check if the host name is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <host_name>"
+    exit 1
+fi
+
+HOST_NAME="$1"
+
+# Find the PID of the host using ps and grep
+HOST_PID=$(ps aux | grep "mininet:" | grep "$HOST_NAME" | awk '{print $2}')
+
+# Check if the PID was found
+if [ -z "$HOST_PID" ]; then
+    echo "Error: Could not find PID for host '$HOST_NAME'. Make sure the host exists and Mininet is running."
+    exit 2
+fi
+
+# Execute mnexec to attach a shell to the host
+echo "Attaching to host '$HOST_NAME' with PID $HOST_PID..."
+
+sudo mnexec -a "$HOST_PID" \
+       bash -c "env PS1='${HOST_NAME}:\w> ' bash --norc"
