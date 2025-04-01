@@ -1,0 +1,68 @@
+#!/bin/bash
+
+TMUX=my_tmux
+
+# Function to display help message
+show_help() {
+    echo "Usage: $(basename "$0") [OPTION]"
+    echo "Manage the tmux session named '$TMUX'."
+    echo
+    echo "Options:"
+    echo "  -k, --kill     Kill the tmux session if it exists"
+    echo "  -h, --help     Show this help message"
+    exit 0
+}
+
+# Parse command-line arguments
+case "$1" in
+    -k|--kill)
+        if tmux has-session -t $TMUX 2>/dev/null; then
+            echo "Killing tmux session: $TMUX"
+            tmux kill-session -t $TMUX
+        else
+            echo "No tmux session named '$TMUX' found."
+        fi
+        exit 0
+        ;;
+    -h|--help)
+        show_help
+        ;;
+    *)
+        if [ -n "$1" ]; then
+            echo "Invalid option: $1"
+            show_help
+        fi
+        ;;
+esac
+
+# Check if the tmux session is already running
+if tmux has-session -t $TMUX 2>/dev/null; then
+    echo "Attaching to existing tmux session: $TMUX"
+    tmux attach -t $TMUX
+    exit 0
+fi
+
+echo "Creating new tmux session: $TMUX"
+
+# Define initial command for W0
+read -r -d '' w1_env <<-EOF
+    echo "To exit from the tmux session type Ctrl-b d"
+    /bin/bash
+EOF
+
+# Start new tmux session
+tmux new-session -d -s $TMUX -n W0 bash -c "$w1_env"
+
+# Create additional windows
+for i in {1..15}; do
+    tmux new-window -t $TMUX -n "W$i"
+done
+
+# Select first window
+tmux select-window -t $TMUX:W0
+
+# Enable mouse support
+tmux set-option -g mouse on
+
+# Attach to the new session
+tmux attach -t $TMUX
